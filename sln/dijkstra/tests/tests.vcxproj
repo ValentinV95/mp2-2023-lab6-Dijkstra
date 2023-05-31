@@ -137,6 +137,9 @@
     <ClCompile Include="..\..\..\test\test_TRbTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dijkstra\dijkstra.vcxproj">
+      <Project>{ca0d9df8-eb3d-4985-8cd2-cbabe06fb3f3}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\gtest\gtest.vcxproj">
       <Project>{9b66ba54-d1e1-4c38-988d-73eaf575d210}</Project>
     </ProjectReference>
