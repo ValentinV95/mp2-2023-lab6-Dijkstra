@@ -107,7 +107,7 @@ void main()
 	double fullnessPersent = 0.0;
 
 	Graph graph; /*= createGraph()*/;
-	QueueType queueType/* = setQueueType()*/;
+	QueueType queueType = FibonacciHep;/* = setQueueType()*/;
 
 	Dijkstra dijkstra(graph,0,queueType);
 
