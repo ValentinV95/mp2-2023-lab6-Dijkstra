@@ -1,30 +1,30 @@
-#include <gtest.h>
+﻿#include <gtest.h>
 #include "priorityqueue.hpp"
 
 TEST(PriorityQueue, wrong_type_number_in_method)
 {
 	PriorityQueue<int> queue;
-	ASSERT_ANY_THROW(queue.getMin(0));
+	ASSERT_ANY_THROW(queue.front(0));
 }
 
-TEST(PriorityQueue, can_use_method_getMin)
+TEST(PriorityQueue, can_use_method_front)
 {
 	PriorityQueue<int> queue;
-	ASSERT_NO_THROW(queue.getMin(1));
-	ASSERT_NO_THROW(queue.getMin(2));
-	ASSERT_NO_THROW(queue.getMin(3));
+	ASSERT_NO_THROW(queue.front(1));
+	ASSERT_NO_THROW(queue.front(2));
+	ASSERT_NO_THROW(queue.front(3));
 }
 
-TEST(PriorityQueue, can_use_method_insert)
+TEST(PriorityQueue, can_use_method_push)
 {
 	PriorityQueue<int> queue;
-	ASSERT_NO_THROW(queue.insert(2));
+	ASSERT_NO_THROW(queue.push(2));
 }
 
-TEST(PriorityQueue, can_use_method_extract_min)
+TEST(PriorityQueue, can_use_method_pop)
 {
 	PriorityQueue<int> queue;
-	ASSERT_NO_THROW(queue.extractMin());
+	ASSERT_NO_THROW(queue.pop());
 }
 
 TEST(PriorityQueue, can_use_method_size)

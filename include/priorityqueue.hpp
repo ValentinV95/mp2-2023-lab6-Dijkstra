@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "dheap.hpp"
 #include "binomialheap.hpp"
 #include "tree.hpp"
@@ -9,24 +9,24 @@ template<class T>
 class PriorityQueue
 {
 private:
-	DHeap<2, T> dheap;                           // Элементы в д-куче
-	BinHeap<T> bheap;                            // Элементы в биномиальной куче
-	Tree<T> tree;                                // Элементы в красно-черном дереве
+	DHeap<2, T> dheap;                           // Р­Р»РµРјРµРЅС‚С‹ РІ Рґ-РєСѓС‡Рµ
+	BinHeap<T> bheap;                            // Р­Р»РµРјРµРЅС‚С‹ РІ Р±РёРЅРѕРјРёР°Р»СЊРЅРѕР№ РєСѓС‡Рµ
+	Tree<T> tree;                                // Р­Р»РµРјРµРЅС‚С‹ РІ РєСЂР°СЃРЅРѕ-С‡РµСЂРЅРѕРј РґРµСЂРµРІРµ
 
 public:
-	PriorityQueue() {}                           // Конструктор по умолчанию
-	~PriorityQueue() {}                          // Деструктор
-	T* getMin(int type_of_storage_structure);    // Получение указателя на минимальный элемент
-	void insert(const T&);                       // Вставка
-	void extractMin();                           // Изъятие минимума
-	int size(int type_of_storage_structure);     // Размер
-	bool isEmpty(int type_of_storage_structure); // Проверка на пустоту
-	void show();                                 // Вывод на экран трех структур хранения
+	PriorityQueue() {}                           // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	~PriorityQueue() {}                          // Р”РµСЃС‚СЂСѓРєС‚РѕСЂ
+	T* front(int type_of_storage_structure);     // РџРѕР»СѓС‡РµРЅРёРµ СѓРєР°Р·Р°С‚РµР»СЏ РЅР° РјРёРЅРёРјР°Р»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚
+	void push(const T&);                         // Р’СЃС‚Р°РІРєР°
+	void pop();                                  // РР·СЉСЏС‚РёРµ РјРёРЅРёРјСѓРјР°
+	int size(int type_of_storage_structure);     // Р Р°Р·РјРµСЂ
+	bool isEmpty(int type_of_storage_structure); // РџСЂРѕРІРµСЂРєР° РЅР° РїСѓСЃС‚РѕС‚Сѓ
+	void show();                                 // Р’С‹РІРѕРґ РЅР° СЌРєСЂР°РЅ С‚СЂРµС… СЃС‚СЂСѓРєС‚СѓСЂ С…СЂР°РЅРµРЅРёСЏ
 
 };
 
 template<class T>
-T* PriorityQueue<T>::getMin(int type_of_storage_structure)
+T* PriorityQueue<T>::front(int type_of_storage_structure)
 {
 	switch (type_of_storage_structure)
 	{
@@ -38,7 +38,7 @@ T* PriorityQueue<T>::getMin(int type_of_storage_structure)
 }
 
 template<class T>
-void PriorityQueue<T>::insert(const T& var)
+void PriorityQueue<T>::push(const T& var)
 {
 	dheap.insert(var);
 	bheap.insert(var);
@@ -46,7 +46,7 @@ void PriorityQueue<T>::insert(const T& var)
 }
 
 template<class T>
-void PriorityQueue<T>::extractMin()
+void PriorityQueue<T>::pop()
 {
 	dheap.extractMin();
 	bheap.extractMin();
@@ -80,10 +80,10 @@ bool PriorityQueue<T>::isEmpty(int type_of_storage_structure)
 template<class T>
 void PriorityQueue<T>::show()
 {
-	std::cout << "Элементы в 2-куча: " << std::endl;
+	std::cout << "Р­Р»РµРјРµРЅС‚С‹ РІ 2-РєСѓС‡Р°: " << std::endl;
 	std::cout << dheap << std::endl;
-	std::cout << "Элементы в биномиальной куче: " << std::endl;
+	std::cout << "Р­Р»РµРјРµРЅС‚С‹ РІ Р±РёРЅРѕРјРёР°Р»СЊРЅРѕР№ РєСѓС‡Рµ: " << std::endl;
 	std::cout << bheap << std::endl;
-	std::cout << "Элементы в красно-черном дереве (от самого минимального до максимального): " << std::endl;
+	std::cout << "Р­Р»РµРјРµРЅС‚С‹ РІ РєСЂР°СЃРЅРѕ-С‡РµСЂРЅРѕРј РґРµСЂРµРІРµ (РѕС‚ СЃР°РјРѕРіРѕ РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ РґРѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ): " << std::endl;
 	tree.getTree();
 }

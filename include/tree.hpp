@@ -35,6 +35,19 @@ struct RBNode
 		return temp;
 	}
 
+	RBNode<T>* minLeft()                                  // Минимальный левый потомок
+	{
+		RBNode<T>* temp = this->left;
+
+		while (temp->left)
+		{
+			temp = temp->left;
+		}
+
+
+		return temp;
+	}
+
 	RBNode<T>* minRight()                                  // Минимальный правый потомок
 	{
 		RBNode<T>* temp = this->right;
@@ -56,19 +69,6 @@ struct RBNode
 		{
 			temp = temp->right;
 		}
-
-		return temp;
-	}
-
-	RBNode<T>* minLeft()                                  // Минимальный левый потомок
-	{
-		RBNode<T>* temp = this->left;
-
-		while (temp->left)
-		{
-			temp = temp->left;
-		}
-
 
 		return temp;
 	}

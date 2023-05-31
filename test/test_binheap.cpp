@@ -1,4 +1,4 @@
-#include <gtest.h>
+﻿#include <gtest.h>
 #include "binomialheap.hpp"
 
 TEST(BinHeap, can_create_binheap)

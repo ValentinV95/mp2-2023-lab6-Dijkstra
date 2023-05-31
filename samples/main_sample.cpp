@@ -1,20 +1,27 @@
 ﻿#include <iostream>
 #include "priorityqueue.hpp"
 #include "graph.hpp"
+#include <ctime>
 
 using namespace std;
 
 
 int main()
 {
-	srand(time(NULL));
+	//srand(time(NULL));
 	setlocale(LC_ALL, "Russian");
 
 	Graph graph;
+	std::map<std::string, int> map;
 
-	graph.autoGenerateGraph(5, 0);
-	cout << graph.check() << endl;
+	graph.autoGenerateGraph(3, 0);
 	graph.getAdjacencyMatrix();
-	cout << graph.check() << endl;
-	cout << graph.vertexsSize() << " " << graph.edgesSize() << endl;
+	try
+	{
+		map = graph.Dijkstra(1, "A");
+	}
+	catch (const char* msg)
+	{
+		cout << msg << endl;
+	}
 }

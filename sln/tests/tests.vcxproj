@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\test\test_binheap.cpp" />
     <ClCompile Include="..\..\test\test_dheap.cpp" />
+    <ClCompile Include="..\..\test\test_graph.cpp" />
     <ClCompile Include="..\..\test\test_main.cpp" />
     <ClCompile Include="..\..\test\test_priorityqueue.cpp" />
   </ItemGroup>

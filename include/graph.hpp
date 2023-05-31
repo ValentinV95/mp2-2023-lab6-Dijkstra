@@ -1,35 +1,38 @@
-#pragma once
+п»ї#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
-#include <list>
 #include <map>
 #include <cmath>
 #include <limits>
+#include <queue>
+#include "priorityqueue.hpp"
 
 class Graph
 {
 private:
-	int* matrix;                                 // Матрица смежности
-	std::map<std::string, int> vertexNames;      // Названия вершин и их индексы
-	std::vector<std::string> vectorNames;        // Индексы вершин и их названия
-	int vertexs;
-	int edges;
+	int* matrix;                                 // РњР°С‚СЂРёС†Р° СЃРјРµР¶РЅРѕСЃС‚Рё
+	std::map<std::string, int> vertexNames;      // РќР°Р·РІР°РЅРёСЏ РІРµСЂС€РёРЅ Рё РёС… РёРЅРґРµРєСЃС‹
+	std::vector<std::string> vectorNames;        // РРЅРґРµРєСЃС‹ РІРµСЂС€РёРЅ Рё РёС… РЅР°Р·РІР°РЅРёСЏ
+	std::vector<std::string> minPath;            // РњРёРЅРёРјР°Р»СЊРЅС‹Р№ РїСѓС‚СЊ РґРѕ РІРµСЂС€РёРЅС‹
+	int vertexs;                                 // Р§РёСЃР»Рѕ РІРµСЂС€РёРЅ
+	int edges;                                   // Р§РёСЃР»Рѕ СЂРµР±РµСЂ
 
-	std::string autoGenerateName(int n);
+	std::string autoGenerateName(int n);         // Р“РµРЅРµСЂР°С†РёСЏ РёРјРµРЅРё РґР»СЏ РІРµСЂС€РёРЅС‹
 
 public:
-	Graph();                                     // Конструктор по умолчанию
-	~Graph();                                    // Деструктор
-	int vertexsSize();                           // Количество вершин
-	int edgesSize();                             // Количество ребер
-	bool isEmpty();                              // Проверка на пустоту
-	bool check();                                // Проверка на связность графа
-	void autoGenerateGraph(int, int);            // Генерация графа
-	void setGraph();                             // Ручной ввод графа
-	void getAdjacencyMatrix();                   // Вывод на экран матрицу смежности
-	std::vector<std::string> Dijkstra(std::string); // Алгоритм Дейкстры
-
+	Graph();                                     // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+	~Graph();                                    // Р”РµСЃС‚СЂСѓРєС‚РѕСЂ
+	int vertexsSize();                           // РљРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ
+	int edgesSize();                             // РљРѕР»РёС‡РµСЃС‚РІРѕ СЂРµР±РµСЂ
+	bool isEmpty();                              // РџСЂРѕРІРµСЂРєР° РЅР° РїСѓСЃС‚РѕС‚Сѓ
+	bool check();                                // РџСЂРѕРІРµСЂРєР° РЅР° СЃРІСЏР·РЅРѕСЃС‚СЊ РіСЂР°С„Р°
+	void autoGenerateGraph(int, int);            // Р“РµРЅРµСЂР°С†РёСЏ РіСЂР°С„Р°
+	void setGraph();                             // Р СѓС‡РЅРѕР№ РІРІРѕРґ РіСЂР°С„Р°
+	void getAdjacencyMatrix();                   // Р’С‹РІРѕРґ РЅР° СЌРєСЂР°РЅ РјР°С‚СЂРёС†Сѓ СЃРјРµР¶РЅРѕСЃС‚Рё
+	std::map<std::string, int> Dijkstra(int type_of_storage_structure,
+		             std::string startPoint);    // РђР»РіРѕСЂРёС‚Рј Р”РµР№РєСЃС‚СЂС‹
+	//bool ccheck();
 };
 
 std::string Graph::autoGenerateName(int n)
@@ -73,33 +76,105 @@ bool Graph::isEmpty()
 	return matrix == nullptr;
 }
 
-bool Graph::check()
+/*bool Graph::check()
 {
 	if (isEmpty()) return false;
 
 	bool result = true;
-	int* temp = new int[vertexs * vertexs]();
-	int* temp1 = new int[vertexs * vertexs]();
+	int* matrix1 = new int[vertexs * vertexs]();
+	int* matrix2 = new int[vertexs * vertexs]();
+	int* matrix3 = new int[vertexs * vertexs]();
 
 	for (int i = 0; i < vertexs; i++)
-		for (int j = 0; j < vertexs; j++)
-			temp[i * vertexs + j] = matrix[i * vertexs + j];
+	{
+		for (int j = i; j < vertexs; j++)
+		{
+			if (matrix[i * vertexs + j])
+			{
+				matrix3[i * vertexs + j] = 1;
+				matrix3[j * vertexs + i] = 1;
+			}
+		}
+	}
 
-	//for (int t = 0; t < vertexs)
-	for (int i = 0; i < vertexs; i++)
-		for (int k = 0; k < vertexs; k++)
+	for (int t = 0; t < vertexs - static_cast<int>(log(vertexs)); t++) 
+	{
+		for (int i = 0; i < vertexs; i++)
+		{
+			for (int j = i; j < vertexs; j++)
+			{
+				if (matrix3[i * vertexs + j])
+				{
+					matrix1[i * vertexs + j] = 1;
+					matrix1[j * vertexs + i] = 1;
+					matrix2[i * vertexs + j] = 1;
+					matrix2[j * vertexs + i] = 1;
+				}
+			}
+		}
+
+		for (int i = 0; i < vertexs; i++)
+		{
 			for (int j = 0; j < vertexs; j++)
-				temp1[i * vertexs + j] += matrix[i * vertexs + k] * temp[k * vertexs + j];
+			{
+				matrix3[i * vertexs + j] = 0;
+
+				for (int k = 0; k < vertexs; k++)
+				{
+					matrix3[i * vertexs + j] += matrix1[i * vertexs + k] * matrix2[k * vertexs + j];
+				}
+			}
+		}
+	}
 
 	for (int i = 0; i < vertexs; i++)
+	{
 		for (int j = i + 1; j < vertexs; j++)
-			if (temp1[i * vertexs + j] == 0)
+		{
+			if (matrix3[i * vertexs + j] == 0)
+			{
 				result = false;
+			}
+		}
+	}
 
-	delete[] temp;
-	delete[] temp1;
+	delete[] matrix1;
+	delete[] matrix2;
+	delete[] matrix3;
 
 	return result;
+}*/
+
+bool Graph::check()
+{
+	if (isEmpty()) return false;
+
+	std::vector<int> visVert;                       // РџРѕСЃРµС‰РµРЅРЅС‹Рµ РІРµСЂС€РёРЅС‹
+	std::queue<int> lnkVert;                        // РћС‡РµСЂРµРґСЊ РїРѕСЃРµС‰РµРЅРёСЏ
+	int row, col;                                   // РЎС‚СЂРѕРєРё Рё СЃС‚РѕР»Р±С†С‹
+
+	lnkVert.push(0);
+	visVert.push_back(0);
+
+	while (!lnkVert.empty())
+	{
+		row = lnkVert.front();
+		lnkVert.pop();
+
+		for (col = row + 1; col < vertexs; col++)
+		{
+			if (matrix[row * vertexs + col] != 0 && 
+				std::find(visVert.begin(), visVert.end(), col) == visVert.end())
+			{
+				visVert.push_back(col);
+				lnkVert.push(col);
+			}
+		}
+	}
+
+	if (visVert.size() != vertexs) return false;
+
+	return true;
 }
 
 void Graph::autoGenerateGraph(int n, int percent)
@@ -114,40 +189,52 @@ void Graph::autoGenerateGraph(int n, int percent)
 
 	vertexs = n;
 
-	int maxElement = n * n * percent / 100;
+	int maxEdges = n * (n - 1) / 2;
 	int temp;
-	bool flag = true;
 
 	matrix = new int[vertexs * vertexs]();
 
-	for (int i = 0, j = 0; i < vertexs; i++, j++)
+	for (int i = 0; i < vertexs; i++)
 	{
-		matrix[i * vertexs + j] = 1;
 		vertexNames.insert({ autoGenerateName(i), i });
 		vectorNames.push_back(autoGenerateName(i));
 	}
 
-	for (int i = 0; i < vertexs; i++)
+	for (int i = 0; i < vertexs - 1; i++)
 	{
-		for (int j = i + 1; j < vertexs; j++)
-		{
-			if (matrix[i * vertexs + j] == 0)
-			{
-				temp = rand() % 10;
+		temp = rand() % (vertexs * 100) + 1;
+		matrix[i * vertexs + i + 1] = temp;
+		matrix[(i + 1) * vertexs + i] = temp;
+		edges++;
+	}
 
-				if (!(temp % (maxElement + 1)))
-				{
-					matrix[i * vertexs + j] = temp;
-					matrix[j * vertexs + i] = temp;
-					edges++;
-					break;
-				}
-				if (j + 1 == vertexs)
-				{
-					i = 0;
-				}
-			}
+	maxEdges -= edges;
+	maxEdges = (maxEdges * percent) / 100;
+
+	int count = 0, row = 0, col = 1;
+
+	while (count < maxEdges)
+	{
+		if (row == vertexs - 1)
+		{
+			row = 0;
+			col = 1;
 		}
+		if (col == vertexs)
+		{
+			row++;
+			col = row + 1;
+		}
+		if (matrix[row * vertexs + col] == 0 && (rand() % 50 + 1) % 50 == 0)
+		{
+			temp = rand() % (vertexs * 100 + 1);
+			matrix[row * vertexs + col] = temp;
+			matrix[col * vertexs + row] = temp;
+			count++;
+			edges++;
+		}
+
+		col++;
 	}
 }
 
@@ -162,23 +249,23 @@ void Graph::setGraph()
 	}
 
 	std::string name;
-	std::cout << "Введите количество вершин в графе: ";
+	std::cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ РІ РіСЂР°С„Рµ: ";
 	std::cin >> vertexs;
 
 	matrix = new int[vertexs * vertexs]();
 
-	for (int i = 0, j = 0; i < vertexs; i++, j++)
-		matrix[i * vertexs + j] = 1;
+	//for (int i = 0, j = 0; i < vertexs; i++, j++)
+		//matrix[i * vertexs + j] = 1;
 
 	for (int i = 0; i < vertexs; i++)
 	{
-		std::cout << (i + 1) << ") Введите название вершины: ";
+		std::cout << (i + 1) << ") Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РІРµСЂС€РёРЅС‹: ";
 		std::cin >> name;
 
 		if (vertexNames.count(name))
 		{
 			std::cout << "__________________________________________" << std::endl;
-			std::cout << "Данная вершина уже есть, повторите попытку" << std::endl;
+			std::cout << "Р”Р°РЅРЅР°СЏ РІРµСЂС€РёРЅР° СѓР¶Рµ РµСЃС‚СЊ, РїРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ" << std::endl;
 			i--;
 		}
 		else
@@ -198,38 +285,38 @@ void Graph::setGraph()
 		while (loop)
 		{
 			std::cout << "__________________________________________" << std::endl;
-			std::cout << "Для ввода связной вершины к вершине " << vectorNames[i] << " введите 1" << std::endl;
-			std::cout << "Для перехода к следующей вершине введите 2" << std::endl;
-			std::cout << "Чтобы закончить вводить вершины нажмите любую другую клавишу" << std::endl;
-			std::cout << "Ваш выбор: ";
+			std::cout << "Р”Р»СЏ РІРІРѕРґР° СЃРІСЏР·РЅРѕР№ РІРµСЂС€РёРЅС‹ Рє РІРµСЂС€РёРЅРµ " << vectorNames[i] << " РІРІРµРґРёС‚Рµ 1" << std::endl;
+			std::cout << "Р”Р»СЏ РїРµСЂРµС…РѕРґР° Рє СЃР»РµРґСѓСЋС‰РµР№ РІРµСЂС€РёРЅРµ РІРІРµРґРёС‚Рµ 2" << std::endl;
+			std::cout << "Р§С‚РѕР±С‹ Р·Р°РєРѕРЅС‡РёС‚СЊ РІРІРѕРґРёС‚СЊ РІРµСЂС€РёРЅС‹ РЅР°Р¶РјРёС‚Рµ Р»СЋР±СѓСЋ РґСЂСѓРіСѓСЋ РєР»Р°РІРёС€Сѓ" << std::endl;
+			std::cout << "Р’Р°С€ РІС‹Р±РѕСЂ: ";
 			std::cin >> choice;
 
 			switch (choice) {
 			case ENTER:
 			{
 				std::cout << "__________________________________________" << std::endl;
-				std::cout << "Введите связную вершину для вершины " << vectorNames[i];
+				std::cout << "Р’РІРµРґРёС‚Рµ СЃРІСЏР·РЅСѓСЋ РІРµСЂС€РёРЅСѓ РґР»СЏ РІРµСЂС€РёРЅС‹ " << vectorNames[i];
 				std::cout << ": ";
 				std::cin >> name;
 				if (!vertexNames.count(name))
 				{
 					std::cout << "__________________________________________" << std::endl;
-					std::cout << "Введенная вершина не найдена. Повторите попытку." << std::endl;
+					std::cout << "Р’РІРµРґРµРЅРЅР°СЏ РІРµСЂС€РёРЅР° РЅРµ РЅР°Р№РґРµРЅР°. РџРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ." << std::endl;
 				}
-				else if (matrix[i * vertexs + vertexNames[name]])
+				else if (matrix[i * vertexs + vertexNames[name]] || i == vertexNames[name])
 				{
 					std::cout << "__________________________________________" << std::endl;
-					std::cout << "Введенная вершина уже связана с данной. Повторите попытку." << std::endl;
+					std::cout << "Р’РІРµРґРµРЅРЅР°СЏ РІРµСЂС€РёРЅР° СѓР¶Рµ СЃРІСЏР·Р°РЅР° СЃ РґР°РЅРЅРѕР№. РџРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ." << std::endl;
 				}
 				else
 				{
-					std::cout << "Введите вес ребра между " << vectorNames[i];
-					std::cout << " и " << name << ": ";
+					std::cout << "Р’РІРµРґРёС‚Рµ РІРµСЃ СЂРµР±СЂР° РјРµР¶РґСѓ " << vectorNames[i];
+					std::cout << " Рё " << name << ": ";
 					std::cin >> weight;
 
 					if (weight <= 0)
 					{
-						std::cout << "Вес ребра не может быть 0 или отрицательным числом. Повторите попытку." << std::endl;
+						std::cout << "Р’РµСЃ СЂРµР±СЂР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ 0 РёР»Рё РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹Рј С‡РёСЃР»РѕРј. РџРѕРІС‚РѕСЂРёС‚Рµ РїРѕРїС‹С‚РєСѓ." << std::endl;
 					}
 					else
 					{
@@ -252,7 +339,8 @@ void Graph::setGraph()
 			{
 				if (!this->check())
 				{
-					std::cout << "Граф не связный. Добавьте новые связи в графе." << std::endl;
+					std::cout << "__________________________________________" << std::endl;
+					std::cout << "Р“СЂР°С„ РЅРµ СЃРІСЏР·РЅС‹Р№. Р”РѕР±Р°РІСЊС‚Рµ РЅРѕРІС‹Рµ СЃРІСЏР·Рё РІ РіСЂР°С„Рµ." << std::endl;
 					i = 0;
 				}
 				else
@@ -280,12 +368,62 @@ void Graph::getAdjacencyMatrix()
 
 		for (int j = 0; j < vertexs; j++)
 		{
-			//if (i > 0) std::cout << vectorNames[i] << " ";
-			//else std::cout << " ";
-
 			std::cout << matrix[i * vertexs + j] << " ";
 		}
 
 		std::cout << std::endl;
 	}
+}
+
+std::map<std::string, int> Graph::Dijkstra(int type_of_storage_structure, std::string startPoint)
+{
+	if (!vertexNames[startPoint]) throw std::runtime_error("Vertex wasn't found");
+
+	int result;
+	int row;
+	PriorityQueue<std::pair<std::string, int>> queue;
+	std::map<std::string, bool> visitedVertexs;
+	std::pair<std::string, int> cur;
+	std::map<std::string, int> costWay;
+
+	queue.push({ startPoint, 0 });
+
+	for (int i = 0; i < vertexs; i++)
+	{
+		costWay.insert({ vectorNames[i], 0});
+	}
+
+	while (!queue.isEmpty(type_of_storage_structure))
+	{
+		cur = *queue.front(type_of_storage_structure);
+		queue.pop();
+		visitedVertexs.insert({ std::get<0>(cur), true });
+
+		row = vertexNames[startPoint];
+
+		for (int i = 0; i < vertexs; i++)
+		{
+			if (matrix[row * vertexs + i])
+			{
+				if (visitedVertexs[vectorNames[i]])
+				{
+					if (costWay[vectorNames[i]] > (matrix[row * vertexs + i] + std::get<1>(cur)))
+					{
+						costWay[vectorNames[i]] = matrix[row * vertexs + i] + std::get<1>(cur);
+					}
+				}
+				else
+				{
+					queue.push({ vectorNames[i], matrix[row * vertexs + i] });
+				}
+			}
+		}
+	}
+
+	return costWay;
+}
+
+void getMinPath(std::string startPoint)
+{
+
 }
