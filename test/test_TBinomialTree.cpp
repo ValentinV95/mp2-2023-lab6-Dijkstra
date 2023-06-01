@@ -5,7 +5,7 @@
 //Могу создать биномиальную кучу
 TEST(TBinomialTree, can_create_binomial_tree)
 {
-	ASSERT_NO_THROW(TBinomialTree<int> tree;);
+	ASSERT_NO_THROW(TBinomialTree<int> tree);
 }
 
 //Могу добавить элемент

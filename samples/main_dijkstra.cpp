@@ -1,7 +1,4 @@
-#include "TRbTree.hpp"
-#include "IPriorityQueue.hpp"
-#include "TDHeap.hpp"
-#include "Deijkstra.cpp"
+#include "Dijkstra.hpp"
 
 QueueType setQueueType()
 {
@@ -83,24 +80,6 @@ Graph createGraph()
 
 void main()
 {
-	Graph g(5);
-	
-	g.addEdge(0,1,10);
-	g.addEdge(0, 4, 100);
-	g.addEdge(0, 3, 30);
-	
-	g.addEdge(1,2,50);
-
-	g.addEdge(4, 2,10);
-	g.addEdge(4, 3,60);
-
-	g.addEdge(3,2,20);
-
-	g.printTable();
-
-	Dijkstra d(g,0,FibonacciHep);
-	d.setStart(0);
-
 	size_t vertexCount;
 	size_t start;
 	string choos = "reset";

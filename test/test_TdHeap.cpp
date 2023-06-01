@@ -5,14 +5,14 @@
 //Могу создать биномиальную кучу
 TEST(TDHeap, can_create_heap)
 {
-	ASSERT_NO_THROW(TDHeap<int> tree;);
+	ASSERT_NO_THROW(TDHeap<int> tree);
 }
 
 //Могу добавить элемент
 TEST(TDHeap, can_insert_element)
 {
 	TDHeap<int> tree;
-	ASSERT_NO_THROW(tree.insert(1););
+	ASSERT_NO_THROW(tree.insert(1));
 }
 
 //Могу получить минимальый элемент
@@ -23,7 +23,7 @@ TEST(TDHeap, can_get_min)
 	tree.insert(1);
 	tree.insert(3);
 
-	ASSERT_NO_THROW(tree.getMin(), 1);
+	ASSERT_NO_THROW(tree.getMin());
 }
 
 //Минимальный элемент находится правильно

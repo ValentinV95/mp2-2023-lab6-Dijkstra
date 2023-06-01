@@ -30,6 +30,9 @@
     <ClInclude Include="..\..\..\include\TRbTree.hpp">
       <Filter>Файлы заголовков\PriorityQeue</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\Dijkstra.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Deijkstra.cpp">
