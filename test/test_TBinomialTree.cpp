@@ -12,7 +12,7 @@ TEST(TBinomialTree, can_create_binomial_tree)
 TEST(TBinomialTree, can_insert_element)
 {
 	TBinomialTree<int> tree;
-	ASSERT_NO_THROW(tree.insert(1););
+	ASSERT_NO_THROW(tree.insert(1));
 }
 
 //Могу получить минимальый элемент
@@ -23,7 +23,7 @@ TEST(TBinomialTree, can_get_min)
 	tree.insert(1);
 	tree.insert(3);
 
-	ASSERT_NO_THROW(tree.getMin(),1);
+	ASSERT_NO_THROW(tree.getMin());
 }
 
 //Минимальный элемент находится правильно
