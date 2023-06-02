@@ -7,257 +7,65 @@
 #include <vector>
 #include <string>
 
-#include "red_black_tree.h"
-#include "d_heap.h"
-#include "binomial_heap.h"
+#include "priority_queue.h"
 
 using std::vector;
 
-template <typename T>
+/// a value indicating the absence of a connection between specific vertices
+const size_t INF = 1e9;  
+
 class WeightedGraph
 {
 private:
-	const T INF = std::numeric_limits<T>::max();
-	vector<vector<T>> adjMatrix;
-	size_t vertices_num;
-	size_t edges_num;
+	vector<vector<size_t>> adjMatrix;  // adjacency matrix for storing weights of graph edges
+	size_t vertices_num;               // number of vertices
+	size_t edges_num;                  // number of edges
+	size_t add_edges_count;            // counter of added edges to regulate graph filling
 public:
-	WeightedGraph() {}
-	WeightedGraph(size_t V, size_t E) : vertices_num(V), edges_num(E)
-	{
-		if (vertices_num <= 0)
-		{
-			throw std::exception("Invalid number of vertex");
-		}
-		if (edges_num < vertices_num - 1 || edges_num > vertices_num * (vertices_num - 1) / 2)
-		{
-			throw std::exception("Invalid number of edges");
-		}
-		adjMatrix = vector<vector<T>>(vertices_num, vector<T>(vertices_num, INF));
-		
-		for (int i = 0; i < vertices_num; i++)
-		{
-			adjMatrix[i][i] = static_cast<T>(0);
-		}
-	}
+	/// <param name="V"> number of vertices </param>
+	/// <param name="E"> number of edges </param>
+	WeightedGraph(size_t V, size_t E);
 
-	T& get_weight(size_t departure, size_t destination)
-	{
-		if (destination < 0 || destination >= vertices_num || departure < 0 || departure >= vertices_num)
-		{
-			throw std::exception("Invalid vertex number");
-		}
-		return adjMatrix[departure][destination];
-	}
-	size_t& get_edges_num()
-	{
-		return edges_num;
-	}
-	size_t& get_vertices_num()
-	{
-		return vertices_num;
-	}
+	/// <!--getters-->
+	const size_t get_weight(size_t departure, size_t destination) const;
+	const size_t get_edges_num() const noexcept;
+	const size_t get_vertices_num() const noexcept;
 
-	bool is_connected()
-	{
-		for (int i = 0; i < vertices_num; i++)
-		{
-			int existing_connection_count = 0;
-			for (int j = 0; j < vertices_num; j++)
-			{
-				if (i != j && adjMatrix[i][j] != INF)
-				{
-					existing_connection_count++;
-					break;
-				}
-			}
-			if (existing_connection_count == 0)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+	bool is_connected();  // checking the graph for connectivity
 
-	void add_edge(size_t departure, size_t destination, T& weight)
-	{
-		if (departure != destination && departure < vertices_num && destination < vertices_num && weight >= 0)
-		{
-			if (adjMatrix[departure][destination] != INF)
-			{
-				throw std::exception("This edge already exists");
-			}
-			adjMatrix[departure][destination] = weight;
-			adjMatrix[destination][departure] = weight;
-		}
-		else throw std::exception("Invalid input");
-	}
+	/// adding a new edge when manually filling in a weighted graph
+	void add_edge(size_t departure, size_t destination, size_t weight);
 
-	void random_fill()
-	{
-		std::vector<size_t> arr;
-		for (int i = 0; i < vertices_num; i++)
-		{
-			arr.push_back(i);
-		}
-		srand(static_cast<unsigned>(time(0)));
-		std::random_shuffle(arr.begin(), arr.end());
+	/// random filling of the graph (does not allow re-filling)
+	void random_fill();  
 
-		int count = 0;
-		int root = 0;
-		T rand_weight;
-		for (int i = 1; i < vertices_num;)
-		{
-			if (count < 2)
-			{
-				rand_weight = static_cast<T>(rand() % 100);
-				adjMatrix[arr[root]][arr[i]] = rand_weight;
-				adjMatrix[arr[i]][arr[root]] = rand_weight;
-				count++;
-				i++;
-			}
-			else
-			{
-				root++;
-				count = 0;
-			}
-		}
-		int edge_count = vertices_num - 1;
-		int rand_departure;
-		int rand_destination;
-		while (edge_count < edges_num)
-		{
-			rand_departure = rand() % vertices_num;
-			rand_destination = rand() % vertices_num;
-			rand_weight = static_cast<T>(rand() % 100);
-			if (rand_departure != rand_destination && adjMatrix[rand_departure][rand_destination] == INF)
-			{
-				adjMatrix[rand_departure][rand_destination] = rand_weight;
-				adjMatrix[rand_destination][rand_departure] = rand_weight;
-				edge_count++;
-			}
-		}
-	}
-
-	void print()
-	{
-		std::cout << "     ";
-		for (int n = 0; n < vertices_num; n++)
-		{
-			std::cout << std::setw(2) << n << "  ";
-		}
-		std::cout << std::endl << std::endl;
-		for (int i = 0; i < vertices_num; i++)
-		{
-			std::cout << std::setw(2) << i << "|  ";
-			for (int j = 0; j < vertices_num; j++)
-			{
-				if (adjMatrix[i][j] != INF)
-				{
-					std::cout << std::setw(2) << adjMatrix[i][j] << "  ";
-				}
-				else std::cout << std::setw(2) << "--" << "  ";
-			}
-			std::cout << std::endl << std::endl;
-		}
-	}
+	/// output of a weighted graph in the form of an adjacency matrix
+	void print();  
 };
 
 
-template<typename T>
 class ShortestPaths
 {
 private:
-	const T INF = std::numeric_limits<T>::max();
-	struct Edge
+	struct Edge  
 	{
-		bool relaxed;
-		T weight;
-		size_t departure;
-		size_t destination;
+		size_t weight;       // weight of the edge (segment of the path)
+		size_t departure;    // the vertex of departure to the i-th vertex
 	};
-	WeightedGraph<T> graph;
-	vector<Edge> paths;
-	size_t start_vertex;
-	size_t vertices_number;
+	WeightedGraph graph;     // the graph on which the shortest paths are searched
+	vector<Edge> paths;      // container for storing information about paths and their costs
+	size_t start_vertex;     // the starting vertex for Dijkstra's algorithm
+	size_t vertices_number;  // number of vertices
 
-	void Dijkstra_algorithm(WeightedGraph<T>& graph, PriorityQueue<T, size_t>& relaxation_queue)
-	{
-		for (int n = 0; n < vertices_number; n++)
-		{
-			paths.push_back(Edge{ false, INF });
-		}
-		
-		paths[start_vertex] = Edge{ false, static_cast<T>(0), start_vertex, start_vertex };
-
-		relaxation_queue.insert(paths[start_vertex].weight, paths[start_vertex].destination);
-
-		int relaxation_counter = 0;
-		while (!relaxation_queue.empty() && relaxation_counter < vertices_number)
-		{
-			size_t current = relaxation_queue.extract_min();
-
-			paths[current].relaxed = true;
-			relaxation_counter++;
-
-			for (size_t i = 0; i < vertices_number; i++)
-			{
-				if (current != i && graph.get_weight(current, i) != INF && paths[i].relaxed == false && paths[current].weight + graph.get_weight(current, i) < paths[i].weight)
-				{
-					T current_weight = paths[current].weight + graph.get_weight(current, i);
-					paths[i] = Edge{ false, current_weight, current, i };
-					relaxation_queue.insert(current_weight, i);
-				}
-			}
-		}
-	}
+	/// shortest paths search algorithm
+	void Dijkstra_algorithm(PriorityQueue<size_t, size_t>& relaxation_queue); 
 public:
-	ShortestPaths(size_t S, WeightedGraph<T>& _graph, PriorityQueue<T, size_t>& _queue) : start_vertex(S)
-	{
-		if (start_vertex < 0 || start_vertex > _graph.get_edges_num())
-		{
-			throw std::exception("Invalid number of start vertex");
-		}
-		vertices_number = _graph.get_vertices_num();
+	/// <param name="S"> the starting vertex for Dijkstra's algorithm </param>
+	/// <param name="_graph"> the graph on which the shortest paths are searched </param>
+	/// <param name="_queue"> one of the priority queue implementations for Dijkstra's algorithm </param>
+	ShortestPaths(size_t S, const WeightedGraph& _graph, PriorityQueue<size_t, size_t>& _queue);
 
-		Dijkstra_algorithm(_graph, _queue);
-	}
-
-	std::string get_shortest_path(size_t destination_vertex)
-	{
-		if (destination_vertex < 0 || destination_vertex >= vertices_number)
-		{
-			throw std::exception("Invalid destination vertex number");
-		}
-		vector<std::string> reverse_path;
-		reverse_path.push_back(std::to_string(destination_vertex));
-
-		size_t current = paths[destination_vertex].departure;
-		reverse_path.push_back(std::to_string(current));
-		while (current != start_vertex)
-		{
-			current = paths[current].departure;
-			reverse_path.push_back(std::to_string(current));
-		}
-		
-		std::string path = reverse_path.back();
-		
-		reverse_path.pop_back();
-		while (!reverse_path.empty())
-		{
-			path += " -> ";
-			path += reverse_path.back();
-			reverse_path.pop_back();
-		}
-		return path;
-	}
-
-	T& get_total_cost(size_t destination_vertex)
-	{
-		if (destination_vertex < 0 || destination_vertex >= vertices_number)
-		{
-			throw std::exception("Invalid destination vertex number");
-		}
-		return paths[destination_vertex].weight;
-	}
+	/// <!--getters-->
+	std::string get_shortest_path(size_t destination_vertex);
+	const size_t get_total_cost(size_t destination_vertex) const;
 };

@@ -40,13 +40,11 @@ private:
 		// merge root lists
 		if (other.head == nullptr)
 		{
-			update_minimum();
 			return;
 		}
 		if (head == nullptr)
 		{
 			head = other.head;
-			update_minimum();
 			return;
 		}
 		Node* final_head = nullptr;
@@ -136,41 +134,39 @@ private:
 			}
 			next = current->sibling;
 		}
-		update_minimum();
 	}
 public:
 	BinomialHeapQueue() : head(nullptr), minimum(nullptr), prev_minimum(nullptr) {}
-
-	bool empty() const override
-	{
-		return minimum == nullptr;
-	}
-
+	
 	void insert(const P& _priority, const T& _data) override
 	{
-		if (head == nullptr)
-		{
-			head = new Node{ _priority, _data, 0, nullptr, nullptr, nullptr };
-			minimum = head;
-		}
-		else
-		{
-			BinomialHeapQueue<P, T> inserted;
-			Node* new_node = new Node{ _priority, _data, 0, nullptr, nullptr, nullptr };
-			inserted.head = new_node;
-			merge(inserted);
-		}
+		BinomialHeapQueue<P, T> inserted;
+		Node* inserted_node = new Node{ _priority, _data, 0, nullptr, nullptr, nullptr };
+		inserted.head = inserted_node;
+		merge(inserted);
+		update_minimum();
 	}
-	T extract_min() override
+	const T& get_min() const override
 	{
+		if (minimum == nullptr)
+		{
+			throw std::exception("Queue is empty");
+		}
+		return minimum->data;
+	}
+	void extract_min() override
+	{
+		if (minimum == nullptr)
+		{
+			throw std::exception("Queue is empty");
+		}
+
 		// break the connection with the minimum
 		if (prev_minimum != nullptr)
 		{
 			prev_minimum->sibling = minimum->sibling;
 		}
 		else head = minimum->sibling;
-
-		Node* old_minimum = minimum;
 
 		// reverse the list of minimum children
 		Node* child = minimum->child;
@@ -185,12 +181,10 @@ public:
 		BinomialHeapQueue<P, T> reunited;
 		reunited.head = previous;
 
-		T min_data = minimum->data;
+		delete minimum;
 		minimum = nullptr;
 		merge(reunited);
-
-		delete old_minimum;
-		return min_data;
+		update_minimum();
 	}
 
 	~BinomialHeapQueue()

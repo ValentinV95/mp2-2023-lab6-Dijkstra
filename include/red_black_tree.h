@@ -37,6 +37,19 @@ private:
         }
         return nullptr;
     }
+    Node* get_min_node() const
+    {
+        Node* node = root;
+        if (node == nil)
+        {
+            throw std::exception("Queue is empty");
+        }
+        while (node->left != nil)
+        {
+            node = node->left;
+        }
+        return node;
+    }
 
     void left_rotate(Node* node)
     {
@@ -241,61 +254,6 @@ private:
         }
         set_color(root, Color::black);
     }
-public:
-    RedBlackTreeQueue()
-    {
-        nil = new Node{ Color::black };
-        root = nil;
-    }
-    bool empty() const override
-    {
-        return root == nil;
-    }
-
-    T extract_min() override
-    {
-        Node* node = root;
-        while (node->left != nil)
-        {
-            node = node->left;
-        }
-        Node min = *node;
-        remove(node->key);
-        return min.data;
-    }
-    void insert(const K& _key, const T& _data) override
-    {
-        if (root == nil)
-        {
-            root = new Node{ Color::black, _key, _data, nil, nil, nullptr };
-            return;
-        }
-        Node* node = root;
-        while (_key != node->key)
-        {
-            if (_key < node->key)
-            {
-                if (node->left == nil)
-                {
-                    node->left = new Node{ Color::red, _key, _data, nil, nil, node };
-                    fix_insert(node->left);
-                    return;
-                }
-                else node = node->left;
-            }
-            else
-            {
-                if (node->right == nil)
-                {
-                    node->right = new Node{ Color::red, _key, _data, nil, nil, node };
-                    fix_insert(node->right);
-                    return;
-                }
-                else node = node->right;
-            }
-        }
-        throw std::exception("key duplicate insert failure");
-    }
     void remove(const K& _key)
     {
         Node* node = find_node(_key);
@@ -402,6 +360,53 @@ public:
         }
         delete node;
     }
+public:
+    RedBlackTreeQueue()
+    {
+        nil = new Node{ Color::black };
+        root = nil;
+    }
+
+    const T& get_min() const override
+    {
+        return get_min_node()->data;
+    }
+    void extract_min() override
+    {
+        remove(get_min_node()->key);
+    }
+    void insert(const K& _key, const T& _data) override
+    {
+        if (root == nil)
+        {
+            root = new Node{ Color::black, _key, _data, nil, nil, nullptr };
+            return;
+        }
+        Node* node = root;
+        while (_key != node->key)
+        {
+            if (_key <= node->key)
+            {
+                if (node->left == nil)
+                {
+                    node->left = new Node{ Color::red, _key, _data, nil, nil, node };
+                    fix_insert(node->left);
+                    return;
+                }
+                else node = node->left;
+            }
+            else
+            {
+                if (node->right == nil)
+                {
+                    node->right = new Node{ Color::red, _key, _data, nil, nil, node };
+                    fix_insert(node->right);
+                    return;
+                }
+                else node = node->right;
+            }
+        }
+    }
 
     ~RedBlackTreeQueue()
     {
@@ -433,7 +438,8 @@ public:
                             }
                             else node->right = nil;
                             delete tmpNode;
-                        } while (node != root && node->right == nil);
+                        } 
+                        while (node != root && node->right == nil);
                     }
                 }
             }

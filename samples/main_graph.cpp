@@ -1,16 +1,24 @@
-#include <priority_queue.h>
-#include <red_black_tree.h>
-#include <d_heap.h>
-#include <binomial_heap.h>
-#include <Graph.h>
+#include <iostream>
 
-#define d 3
+#include "red_black_tree.h"
+#include "d_heap.h"
+#include "binomial_heap.h"
+#include "Graph.h"
+
+#define d 3 // the arity of the d-heap
 
 using std::cout;
 using std::endl;
-using std::cin;
 
-void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
+template <typename type>
+void input(type& buffer)
+{
+	std::cin >> buffer;
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+void do_actions(WeightedGraph& g, ShortestPaths& sp)
 {
 	enum actions {
 		OUTPUT_GRAPH = 1,
@@ -27,7 +35,7 @@ void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
 		cout << " 3 - Get total cost of the path to the vertex" << endl;
 		cout << " 4 - Exit" << endl;
 		cout << "Action: ";
-		cin >> select;
+		input(select);
 		if (select == EXIT) return;
 
 		switch (select)
@@ -42,7 +50,7 @@ void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
 		{
 			int vertex;
 			cout << "\nEnter the vertex: ";
-			cin >> vertex;
+			input(vertex);
 			try
 			{
 				cout << "\nShortest path: ";
@@ -50,7 +58,7 @@ void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
 			}
 			catch (const std::exception& except)
 			{
-				cout << except.what() << endl;
+				cout << "ERROR: " << except.what() << endl;
 			}
 			break;
 		}
@@ -58,7 +66,7 @@ void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
 		{
 			int vertex;
 			cout << "\nEnter the vertex: ";
-			cin >> vertex;
+			input(vertex);
 			try
 			{
 				cout << "\nTotal cost: ";
@@ -66,7 +74,7 @@ void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
 			}
 			catch (const std::exception& except)
 			{
-				cout << except.what() << endl;
+				cout << "ERROR: " << except.what() << endl;
 			}
 			break;
 		}
@@ -81,52 +89,69 @@ void do_actions(WeightedGraph<int>& g, ShortestPaths<int>& sp)
 
 int main()
 {
+	cout << "Dear user, for the correct operation of the program ";
+	cout << "do NOT enter anything other than numbers!" << endl << endl;
 	cout << "Rules for entering a graph: " << endl;
 	cout << " 1 - The vertices of the graph are automatically numbered sequentially starting from zero" << endl;
 	cout << " 2 - The number of vertices and edges is greater than zero" << endl;
-	cout << " 3 - The weight of each edge must be at least zero" << endl;
-	cout << " 4 - The graph must not contain loops" << endl;
-	cout << " 5 - The graph must be connected, that is, each vertex must be connected to at least one other vertex" << endl;
-	cout << " 6 - It is forbidden to re-enter the same edge" << endl;
+	cout << " 3 - Acceptable values of edge weight: [0;";
+	cout << std::scientific << std::setprecision(0) << static_cast<double>(INF) << ")" << endl;
+	cout << " 4 - The value of edge weight must be an integer" << endl;
+	cout << " 5 - The graph must not contain loops" << endl;
+	cout << " 6 - The graph must be connected, that is, each vertex must be connected to at least one other vertex" << endl;
+	cout << " 7 - It is forbidden to re-enter the same edge" << endl;
 
 	int vertices;
 	int edges;
 
 	cout << "\nThe number of vertices of the graph: ";
-	cin >> vertices;
+	input(vertices);
 	if (vertices <= 0)
 	{
 		cout << "\nERROR: Invalid number of vertices";
+		return 1;
 	}
 	cout << "\nThe number of edges of the graph: ";
-	cin >> edges;
+	input(edges);
 	if (edges < vertices - 1 || edges > vertices * (vertices - 1) / 2)
 	{
 		cout << "\nERROR: Invalid number of edges";
+		return 1;
 	}
 
-	WeightedGraph<int> G(vertices, edges);
+	WeightedGraph G(vertices, edges);
 
 	int select = 0;
 	cout << "Methods of filling in the graph: " << endl;
 	cout << " 1 - Manual filling" << endl;
 	cout << " 2 - Random filling" << endl;
 	cout << "Number: ";
-	cin >> select;
+	input(select);
 
-	if (select == 1)
+	if (select == 1) // manual filling
 	{
+		cout << "\nAcceptable values of vertex numbers: [0;" << vertices << ")" << endl;
 		for (int i = 0; i < edges; i++)
 		{
-			size_t enter_departure;
-			size_t enter_destination;
+			int enter_departure;
+			int enter_destination;
 			int enter_weight;
-			std::cout << "\nEnter number of departure vertex: ";
-			std::cin >> enter_departure;
-			std::cout << "\nEnter number of destination vertex: ";
-			std::cin >> enter_destination;
-			std::cout << "\nEnter edge weight: ";
-			std::cin >> enter_weight;
+			cout << "\nEnter number of departure vertex: ";
+			input(enter_departure);
+			if (enter_departure < 0 || enter_departure >= vertices)
+			{
+				cout << "ERROR: " << "Invalid vertex number" << endl;
+				return 1;
+			}
+			cout << "\nEnter number of destination vertex: ";
+			input(enter_destination);
+			if (enter_destination < 0 || enter_destination >= vertices)
+			{
+				cout << "ERROR: " << "Invalid vertex number" << endl;
+				return 1;
+			}
+			cout << "\nEnter edge weight: ";
+			input(enter_weight);
 
 			try
 			{
@@ -134,18 +159,19 @@ int main()
 			}
 			catch(const std::exception& except)
 			{
-				cout << except.what() << endl;
+				cout << "ERROR: " << except.what() << endl;
 				return 1;
 			}
 		}
 	}
-	else if (select == 2)
+	else if (select == 2) // random filling
 	{
 		G.random_fill();
 	}
 	else
 	{
 		cout << "ERROR: Invalid number of filling method" << endl;
+		return 1;
 	}
 
 	enum priority_queue {
@@ -158,7 +184,7 @@ int main()
 		cout << "\nSUCCESS: The graph is connected" << endl;
 		int start;
 		cout << "\nEnter the starting vertex for Dijkstra's algorithm: ";
-		cin >> start;
+		input(start);
 
 		if (start < 0 || start >= vertices)
 		{
@@ -171,28 +197,28 @@ int main()
 		cout << " 2 - D-Heap" << endl;
 		cout << " 3 - Binomial Heap" << endl;
 		cout << "Number: ";
-		cin >> select;
+		input(select);
 
 		switch (select)
 		{
 		case SEARCH_TREE:
 		{
-			RedBlackTreeQueue<int, size_t> Q_tree;
-			ShortestPaths<int> SP(start, G, Q_tree);
+			RedBlackTreeQueue<size_t, size_t> Q_tree;
+			ShortestPaths SP(start, G, Q_tree);
 			do_actions(G, SP);
 			break;
 		}
 		case DHEAP:
 		{
-			DHeapQueue<d, int, size_t> Q_Dheap(vertices * edges);
-			ShortestPaths<int> SP(start, G, Q_Dheap);
+			DHeapQueue<d, size_t, size_t> Q_Dheap(vertices * edges);
+			ShortestPaths SP(start, G, Q_Dheap);
 			do_actions(G, SP);
 			break;
 		}
 		case BINOMUAL_HEAP:
 		{
-			BinomialHeapQueue<int, size_t> Q_binheap;
-			ShortestPaths<int> SP(start, G, Q_binheap);
+			BinomialHeapQueue<size_t, size_t> Q_binheap;
+			ShortestPaths SP(start, G, Q_binheap);
 			do_actions(G, SP);
 			break;
 		}
@@ -205,7 +231,7 @@ int main()
 	}
 	else
 	{
-		cout << "ERROR: Graph is not connection" << endl;
+		cout << "ERROR: Graph is not connected" << endl;
 		return 1;
 	}
 

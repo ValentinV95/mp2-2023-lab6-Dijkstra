@@ -69,21 +69,29 @@ public:
 
 	void insert(const P& _priority, const T& _data) override
 	{
+		if (size == capacity)
+		{
+			throw std::exception("Queue overflow");
+		}
 		pMem[size] = Node{ _priority, _data };
 		sift_up(size++);
 	}
-	T extract_min() override
+	const T& get_min() const override
 	{
-		T ret_data = pMem[0].data;
-		pMem[0] = pMem[--size];
-		
-		sift_down(0);
-		return ret_data;
+		if (size == 0)
+		{
+			throw std::exception("Queue is empty");
+		}
+		return pMem[0].data;
 	}
-
-	bool empty() const override
+	void extract_min() override
 	{
-		return size == 0;
+		if (size == 0)
+		{
+			throw std::exception("Queue is empty");
+		}
+		pMem[0] = pMem[--size];
+		sift_down(0);
 	}
 
 	~DHeapQueue()
