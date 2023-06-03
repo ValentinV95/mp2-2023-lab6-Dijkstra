@@ -1,5 +1,5 @@
 ﻿#include <gtest.h>
-#include "graph.hpp"
+#include "graph.h"
 
 TEST(Graph, can_create_graph)
 {

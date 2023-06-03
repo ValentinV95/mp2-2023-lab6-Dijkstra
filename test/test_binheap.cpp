@@ -30,16 +30,10 @@ TEST(BinHeap, using_method_is_empty_in_empty_binheap_true)
 	EXPECT_EQ(true, binheap.isEmpty());
 }
 
-TEST(BinHeap, can_use_method_get_min_in_empty_binheap)
+TEST(BinHeap, cannot_use_method_get_min_in_empty_binheap)
 {
 	BinHeap<int> binheap;
-	ASSERT_NO_THROW(binheap.getMin());
-}
-
-TEST(BinHeap, using_method_get_min_in_empty_binheap_true)
-{
-	BinHeap<int> binheap;
-	EXPECT_EQ(nullptr, binheap.getMin());
+	ASSERT_ANY_THROW(binheap.getMin());
 }
 
 TEST(BinHeap, can_use_method_get_min_in_binheap)
@@ -51,7 +45,7 @@ TEST(BinHeap, can_use_method_get_min_in_binheap)
 TEST(BinHeap, using_method_get_min_in_binheap_true)
 {
 	BinHeap<int> binheap(2);
-	EXPECT_EQ(2, binheap.getMin()->data);
+	EXPECT_EQ(2, binheap.getMin());
 }
 
 TEST(BinHeap, can_insert_to_empty_binheap)
@@ -64,7 +58,7 @@ TEST(BinHeap, inserting_to_empty_binheap_true)
 {
 	BinHeap<int> binheap;
 	binheap.insert(1);
-	EXPECT_EQ(1, binheap.getMin()->data);
+	EXPECT_EQ(1, binheap.getMin());
 }
 
 TEST(BinHeap, can_insert_to_binheap)
@@ -77,7 +71,7 @@ TEST(BinHeap, inserting_to_binheap_true)
 {
 	BinHeap<int> binheap(3);
 	binheap.insert(1);
-	EXPECT_EQ(1, binheap.getMin()->data);
+	EXPECT_EQ(1, binheap.getMin());
 }
 
 TEST(BinHeap, can_extract_min_in_empty_binheap)
@@ -97,7 +91,7 @@ TEST(BinHeap, extracting_min_in_binheap_true)
 	BinHeap<int> binheap(3);
 	binheap.insert(1);
 	binheap.extractMin();
-	EXPECT_EQ(3, binheap.getMin()->data);
+	EXPECT_EQ(3, binheap.getMin());
 }
 
 TEST(BinHeap, can_use_method_clear_in_binheap)

@@ -7,10 +7,16 @@ TEST(DHeap, can_use_method_get_min)
 	ASSERT_NO_THROW(dheap.getMin());
 }
 
+TEST(DHeap, cannot_use_method_get_min_in_empty_dheap)
+{
+	DHeap<2, int> dheap;
+	ASSERT_ANY_THROW(dheap.getMin());
+}
+
 TEST(DHeap, using_method_get_min_true)
 {
 	DHeap<2, int> dheap(4);
-	EXPECT_EQ(*dheap.getMin(), 4);
+	EXPECT_EQ(dheap.getMin(), 4);
 }
 
 TEST(DHeap, can_use_method_is_empty)
@@ -53,7 +59,7 @@ TEST(DHeap, inserting_smth_in_dheap_true)
 {
 	DHeap<2, int> dheap(4);
 	dheap.insert(2);
-	EXPECT_EQ(*dheap.getMin(), 2);
+	EXPECT_EQ(dheap.getMin(), 2);
 }
 
 TEST(DHeap, inserting_smth_in_dheap_increase_size)
@@ -73,7 +79,7 @@ TEST(DHeap, inserting_smth_in_empty_dheap_true)
 {
 	DHeap<2, int> dheap;
 	dheap.insert(2);
-	EXPECT_EQ(*dheap.getMin(), 2);
+	EXPECT_EQ(dheap.getMin(), 2);
 }
 
 TEST(DHeap, can_extract_min_in_dheap)
@@ -87,6 +93,14 @@ TEST(DHeap, extracting_min_in_dheap_decrease_size)
 	DHeap<2, int> dheap(4);
 	dheap.extractMin();
 	EXPECT_EQ(0, dheap.size());
+}
+
+TEST(DHeap, extracting_min_in_dheap_true)
+{
+	DHeap<2, int> dheap(4);
+	dheap.insert(1);
+	dheap.extractMin();
+	EXPECT_EQ(4, dheap.getMin());
 }
 
 TEST(DHeap, can_extract_min_in_empty_dheap)

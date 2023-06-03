@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include <vector>
 #include <algorithm>
 #include <cmath>
@@ -19,7 +20,7 @@ public:
 	DHeap();                                     // Конструктор по умолчанию  
 	DHeap(const T&);                             // Конструктор инициализации корня
 	void insert(const T&);                       // Вставка
-	T* getMin();                                 // Получить значение корня
+	T getMin();                                  // Получить значение корня
 	void extractMin();                           // Извлечение корня
 	int size() const { return tsize; }           // Получить количество элементов
 	bool isEmpty() const { return tsize == 0; }  // Проверка на пустоту
@@ -50,10 +51,9 @@ template <int d, class T>
 int DHeap<d, T>::minChild(int ind)
 {
 	int child = d * ind + 1;
-	if (child >= tsize) return 0;
 	int min = child;
 
-	for (int i = child; i < std::min(tsize, child + d); i++)
+	for (int i = child + 1; i < std::min(tsize, child + d); i++)
 	{
 		if (tData[min] > tData[i])
 			min = i;
@@ -65,13 +65,15 @@ int DHeap<d, T>::minChild(int ind)
 template <int d, class T>
 void DHeap<d, T>::shiftUp(int ind)
 {
-	int parent = (ind - 1) % d;
+	int parent = (ind - 1) / d;
 
 	while (ind != 0 && tData[ind] < tData[parent])
 	{
-		std::swap(tData[ind], tData[parent]);
+		T temp = tData[ind];
+		tData[ind] = tData[parent];
+		tData[parent] = temp;
 		ind = parent;
-		parent = (ind - 1) % d;
+		parent = (ind - 1) / d;
 	}
 }
 
@@ -80,9 +82,11 @@ void DHeap<d, T>::shiftDown(int ind)
 {
 	int child = minChild(ind);
 
-	while (child != 0 && tData[ind] > tData[child])
+	while (child < tsize && tData[ind] > tData[child])
 	{
-		std::swap(tData[ind], tData[child]);
+		T temp = tData[ind];
+		tData[ind] = tData[child];
+		tData[child] = temp;
 		ind = child;
 		child = minChild(ind);
 	}
@@ -91,13 +95,13 @@ void DHeap<d, T>::shiftDown(int ind)
 template <int d, class T>
 DHeap<d, T>::DHeap() : tsize(0)
 {
-	if (d < 1) throw std::logic_error("DHeap can't be ");
+	if (d < 1) throw std::logic_error("Wrong child number");
 }
 
 template <int d, class T>
 DHeap<d, T>::DHeap(const T& var) : tsize(1)
 {
-	if (d < 1) throw std::logic_error("DHeap can't be ");
+	if (d < 1) throw std::logic_error("Wrong child number");
 	tData.push_back(var);
 }
 
@@ -105,15 +109,19 @@ template <int d, class T>
 void DHeap<d, T>::insert(const T& var)
 {
 	tData.push_back(var);
-	shiftUp(tsize);
-	tsize++;
+	shiftUp(tsize++);
 }
 
 template <int d, class T>
-T* DHeap<d, T>::getMin()
+T DHeap<d, T>::getMin()
 {
-	if (isEmpty()) return nullptr;
-	return &tData[0];
+	if (isEmpty())
+	{
+		std::string error = "DHeap is empty. Try again.";
+		throw error;
+	}
+
+	return tData[0];
 }
 
 template <int d, class T>
@@ -121,7 +129,8 @@ void DHeap<d, T>::extractMin()
 {
 	if (!isEmpty())
 	{
-		std::swap(tData[0], tData[--tsize]);
+		tData[0] = tData[--tsize];
+		tData.pop_back();
 		shiftDown(0);
 	}
 }

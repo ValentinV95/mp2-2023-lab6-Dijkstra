@@ -21,11 +21,14 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\binomialheap.hpp" />
     <ClInclude Include="..\..\include\dheap.hpp" />
-    <ClInclude Include="..\..\include\graph.hpp" />
+    <ClInclude Include="..\..\include\dijkstra.h" />
+    <ClInclude Include="..\..\include\graph.h" />
     <ClInclude Include="..\..\include\priorityqueue.hpp" />
     <ClInclude Include="..\..\include\tree.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\dijkstra.cpp" />
+    <ClCompile Include="..\..\src\graph.cpp" />
     <ClCompile Include="..\..\src\tree.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

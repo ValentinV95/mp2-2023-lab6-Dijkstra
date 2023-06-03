@@ -23,54 +23,44 @@ struct RBNode
 	RBNode(const T& var) : tcolor(red), data(var), left(nullptr), right(nullptr), parent(nullptr)
 	{}
 
-	RBNode<T>* maxLeft()                                   // Максимальный левый потомок
-	{
-		RBNode<T>* temp = this->left;
-
-		while (temp->right)
-		{
-			temp = temp->right;
-		}
-
-		return temp;
-	}
-
 	RBNode<T>* minLeft()                                  // Минимальный левый потомок
 	{
-		RBNode<T>* temp = this->left;
-
-		while (temp->left)
+		if (this->left)
 		{
-			temp = temp->left;
+			RBNode<T>* temp = this->left;
+
+			while (temp->left)
+			{
+				temp = temp->left;
+			}
+
+
+			return temp;
 		}
-
-
-		return temp;
+		else
+		{
+			return &(*this);
+		}
 	}
 
 	RBNode<T>* minRight()                                  // Минимальный правый потомок
 	{
-		RBNode<T>* temp = this->right;
-
-		while (temp->left)
+		if (this->right)
 		{
-			temp = temp->left;
+			RBNode<T>* temp = this->right;
+
+			while (temp->left)
+			{
+				temp = temp->left;
+			}
+
+
+			return temp;
 		}
-
-
-		return temp;
-	}
-
-	RBNode<T>* maxRight()                                   // Максимальный правый потомок
-	{
-		RBNode<T>* temp = this->right;
-
-		while (temp->right)
+		else
 		{
-			temp = temp->right;
+			return &(*this);
 		}
-
-		return temp;
 	}
 
 };
@@ -102,7 +92,7 @@ public:
 	int size() const;                                      // Получение количества узлов в данный момент
 	void clear();                                          // Удаление всех узлов в дереве
 	void getTree() const;                                  // Функция вызова поиска в глубину
-	RBNode<T>* getMin();                                   // Минимальный элемент
+	T getMin();                                            // Минимальный элемент
 	void extractMin();                                     // Удаление минимального
 };
 
@@ -464,10 +454,15 @@ void Tree<T>::getTree() const
 }
 
 template<class T>
-RBNode<T>* Tree<T>::getMin()
+T Tree<T>::getMin()
 {
-	if (isEmpty()) return nullptr;
-	return this->root->minLeft();
+	if (isEmpty())
+	{
+		std::string error = "Tree is empty. Try again.";
+		throw error;
+	}
+
+	return this->root->minLeft()->data;
 }
 
 template<class T>

@@ -43,7 +43,7 @@ public:
 	~BinHeap();                                  // Деструктор
 	int size();                                  // Получить количество элементов
 	bool isEmpty();                              // Проверка на пустоту
-	HNode<T>* getMin();                          // Получить минимум
+	T getMin();                                  // Получить минимум
 	void extractMin();                           // Удалить минимум
 	void insert(const T&);                       // Вставка
 	void clear();                                // Очистка кучи
@@ -98,7 +98,6 @@ public:
 			}
 
 			ostr << "  ";
-			//ostr << "\n";
 
 			temp = temp->sibling;
 		}
@@ -149,7 +148,7 @@ void BinHeap<T>::mergeHeap(BinHeap<T>& other)
 	HNode<T>* ptr2 = other.head->sibling;
 	HNode<T>* temp;
 
-	while (ptr1 || ptr2)
+	while (ptr2)
 	{
 		if (ptr1 && ptr2)
 		{
@@ -166,7 +165,7 @@ void BinHeap<T>::mergeHeap(BinHeap<T>& other)
 
 		}
 
-		else if (!ptr1)
+		else
 		{
 			while (ptr2)
 			{
@@ -175,8 +174,6 @@ void BinHeap<T>::mergeHeap(BinHeap<T>& other)
 				ptr2 = ptr2->sibling;
 			}
 		}
-
-		else break;
 	}
 
 	other.head->sibling = nullptr;
@@ -250,9 +247,13 @@ bool BinHeap<T>::isEmpty()
 }
 
 template<class T>
-HNode<T>* BinHeap<T>::getMin()
+T BinHeap<T>::getMin()
 {
-	if (isEmpty()) return nullptr;
+	if (isEmpty())
+	{
+		std::string error = "BinHeap is empty. Try again.";
+		throw error;
+	}
 
 	HNode<T>* temp = head->sibling;
 	HNode<T>* min = temp;
@@ -267,7 +268,7 @@ HNode<T>* BinHeap<T>::getMin()
 		temp = temp->sibling;
 	}
 
-	return min;
+	return min->data;
 }
 
 template<class T>
@@ -275,7 +276,21 @@ void BinHeap<T>::extractMin()
 {
 	if (isEmpty()) return;
 
-	HNode<T>* temp = getMin();
+	HNode<T>* temp = head->sibling;
+	HNode<T>* min = temp;
+
+	while (temp)
+	{
+		if (min->data > temp->data)
+		{
+			min = temp;
+		}
+
+		temp = temp->sibling;
+	}
+
+	temp = min;
+
 	HNode<T>* prev = head;
 	HNode<T>* cur = head->sibling;
 	BinHeap bheap;
