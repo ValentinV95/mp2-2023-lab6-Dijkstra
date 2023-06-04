@@ -5,6 +5,9 @@
 #include <map>
 #include <queue>
 #include <iomanip>
+#include <limits>
+
+const int INF = std::numeric_limits<int>::max();
 
 class Graph
 {
@@ -20,8 +23,8 @@ private:
 public:
 	Graph();                                     // Конструктор по умолчанию
 	~Graph();                                    // Деструктор
-	int vertexsSize() const;                     // Количество вершин
-	int edgesSize() const;                       // Количество ребер
+	int vertSize() const;                     // Количество вершин
+	int edgSize() const;                       // Количество ребер
 	bool isEmpty() const;                        // Проверка на пустоту
 	bool check() const;                          // Проверка на связность графа
 	void autoGenerateGraph(int, int);            // Генерация графа

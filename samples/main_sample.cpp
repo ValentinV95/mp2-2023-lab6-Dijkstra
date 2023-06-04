@@ -6,13 +6,17 @@
 
 using namespace std;
 
-enum {ENTER = 1, OUT, MINPATH};
+enum {ENTER = 1, EOUT, MINPATH};
 enum {MANUAL = 1, AUTO};
 enum {CONT = 1};
 
 void inform()
 {
 	cout << "Программа позволяет генерировать связные графы и находить в них минимальные пути." << endl;
+	cout << "Примечания: " << endl;
+	cout << "Вес ребра не может быть отрицательным." << endl;
+	cout << "Граф должен быть связным. При ручном вводе нужно дополнить граф новыми ребрами до связности." << endl;
+	cout << "Создание петли у вершины невозможно." << endl;
 }
 
 int main()
@@ -80,7 +84,7 @@ int main()
 
 				break;
 			}
-			case OUT:
+			case EOUT:
 			{
 				std::cout << "__________________________________________" << std::endl;
 				sample.showAdjMatrix();
@@ -109,7 +113,7 @@ int main()
 				{
 					std::cout << "__________________________________________" << std::endl;
 					cout << "1) Минимальный путь" << endl;
-					cout << "Любая другая клавишу - выйти" << endl;
+					cout << "Любая другая клавиша - выйти" << endl;
 					cout << "Ваш выбор: ";
 					cin >> choice3;
 
@@ -122,7 +126,6 @@ int main()
 						cout << endl << "Введите вершину, до которой просчитать минимальный путь: ";
 						cin >> endP;
 						std::cout << "__________________________________________" << std::endl;
-						dj.getCostMinWay(sample.toInt(stP));
 
 						list<int> lst = dj.getMinWay(sample.toInt(endP));
 						auto it = lst.begin();

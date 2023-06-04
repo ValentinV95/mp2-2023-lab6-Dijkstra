@@ -2,12 +2,12 @@
 
 void Dijkstra::algorithmDijkstra(int type)
 {
-	PriorityQueue<Vertex> queue(type);                        // Приоритетная очередь, хранящая расстояние и индекс вершины
-	Vertex cur;                                               // Текущая вершина
-	int row;                                                  // Текущий элемент
+	PriorityQueue<Vertex> queue(type);                     // Приоритетная очередь, хранящая расстояние и индекс вершины
+	Vertex cur;                                            // Текущая вершина
+	int row;                                               // Текущий элемент
 
 	queue.push(Vertex(0, startPoint));
-	markedVert[startPoint] = true;
+	destVert[startPoint] = 0;
 
 	while (!queue.isEmpty())
 	{
@@ -15,18 +15,17 @@ void Dijkstra::algorithmDijkstra(int type)
 		queue.pop();
 		row = cur.indName;
 
+		if (markedVert[row] == true) continue;
+		else markedVert[row] = true;
+
 		for (int i = 0; i < size; i++)
 		{
-			if (adjMatrix[row * size + i])
+			if (adjMatrix[row * size + i] != INF && row != i)
 			{
-				if (i != startPoint && (!destVert[i] || destVert[i] > (adjMatrix[row * size + i] + cur.dest)))
+				if (i != startPoint && destVert[i] > (adjMatrix[row * size + i] + cur.dest))
 				{
 					destVert[i] = adjMatrix[row * size + i] + cur.dest;
-				}
-				if (markedVert[i] == false)
-				{
-					queue.push({ destVert[i], i });
-					markedVert[i] = true;
+					queue.push({destVert[i], i});
 				}
 			}
 		}
@@ -36,7 +35,7 @@ void Dijkstra::algorithmDijkstra(int type)
 Dijkstra::Dijkstra(const Graph& graph, int _startPoint, int type)
 {
 	startPoint = _startPoint;
-	size = graph.vertexsSize();
+	size = graph.vertSize();
 
 	if (size <= startPoint || startPoint < 0)
 	{
@@ -52,8 +51,8 @@ Dijkstra::Dijkstra(const Graph& graph, int _startPoint, int type)
 
 	for (int i = 0; i < size; i++)
 	{
-		destVert.insert({ i, 0 });
-		markedVert.insert({ i, false });
+		destVert.insert({i,  INF});
+		markedVert.insert({i, false});
 	}
 
 	algorithmDijkstra(type);
@@ -94,7 +93,7 @@ std::list<int> Dijkstra::getMinWay(int endPoint)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			if (adjMatrix[cur * size + i])
+			if (adjMatrix[cur * size + i] != INF && cur != i)
 			{
 				temp = destVert[cur] - adjMatrix[cur * size + i];
 

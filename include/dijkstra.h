@@ -64,7 +64,7 @@ private:
 
 	void algorithmDijkstra(int);                           // Алгоритм Дейкстры
 
-public: 
+public:
 	Dijkstra(const Graph&, int _startPoint, int type);     // Конструктор
 	~Dijkstra();                                           // Деструктор
 	int getCostMinWay(int);                                // Получить минимальную стоимость до вершины

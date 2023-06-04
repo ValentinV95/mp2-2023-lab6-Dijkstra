@@ -23,28 +23,28 @@ TEST(Graph, can_get_vertexs_number_of_graph)
 {
 	Graph A;
 	A.autoGenerateGraph(100, 1);
-	ASSERT_NO_THROW(A.vertexsSize());
+	ASSERT_NO_THROW(A.vertSize());
 }
 
 TEST(Graph, vertexs_number_of_graph_true)
 {
 	Graph A;
 	A.autoGenerateGraph(100, 0);
-	EXPECT_EQ(100, A.vertexsSize());
+	EXPECT_EQ(100, A.vertSize());
 }
 
 TEST(Graph, can_get_edges_number_of_graph)
 {
 	Graph A;
 	A.autoGenerateGraph(100, 1);
-	ASSERT_NO_THROW(A.edgesSize());
+	ASSERT_NO_THROW(A.edgSize());
 }
 
 TEST(Graph, edges_number_of_graph_true)
 {
 	Graph A;
 	A.autoGenerateGraph(100, 0);
-	EXPECT_EQ(99, A.edgesSize());
+	EXPECT_EQ(99, A.edgSize());
 }
 
 TEST(Graph, can_use_method_is_empty)

@@ -17,21 +17,19 @@ std::string Graph::autoGenerateName(int n)
 }
 
 Graph::Graph() : matrix(nullptr), vertexs(0), edges(0)
-{
-
-}
+{}
 
 Graph::~Graph()
 {
 	delete[] matrix;
 }
 
-int Graph::vertexsSize() const
+int Graph::vertSize() const
 {
 	return vertexs;
 }
 
-int Graph::edgesSize() const
+int Graph::edgSize() const
 {
 	return edges;
 }
@@ -43,7 +41,7 @@ bool Graph::isEmpty() const
 
 bool Graph::check() const
 {
-	if (isEmpty()) return false;
+	if (isEmpty()) return true;
 
 	std::vector<int> visVert;                       // Посещенные вершины
 	std::queue<int> lnkVert;                        // Очередь посещения
@@ -59,7 +57,8 @@ bool Graph::check() const
 
 		for (col = 0; col < vertexs; col++)
 		{
-			if (matrix[row * vertexs + col] != 0 &&
+			if (matrix[row * vertexs + col] != INF &&
+				row != col &&
 				std::find(visVert.begin(), visVert.end(), col) == visVert.end())
 			{
 				visVert.push_back(col);
@@ -89,6 +88,8 @@ void Graph::autoGenerateGraph(int n, int percent)
 
 	if (!isEmpty())
 	{
+		vertInd.clear();
+		vertNames.clear();
 		delete[] matrix;
 		matrix = nullptr;
 		vertexs = 0;
@@ -97,7 +98,22 @@ void Graph::autoGenerateGraph(int n, int percent)
 
 	vertexs = n;
 
-	matrix = new int[vertexs * vertexs]();
+	matrix = new int[vertexs * vertexs];
+
+	for (int i = 0; i < vertexs; i++)
+	{
+		for (int j = 0; j < vertexs; j++)
+		{
+			if (i == j)
+			{
+				matrix[i * vertexs + j] = 0;
+			}
+			else
+			{
+				matrix[i * vertexs + j] = INF;
+			}
+		}
+	}
 
 	for (int i = 0; i < vertexs; i++)
 	{
@@ -113,7 +129,7 @@ void Graph::autoGenerateGraph(int n, int percent)
 	{
 		for (int i = row + 1; i < vertexs; i++)
 		{
-			if (matrix[row * vertexs + i] == 0 && rand() % vertexs == 0)
+			if (matrix[row * vertexs + i] == INF && rand() % vertexs == 0)
 			{
 				temp = rand() % (vertexs * 100) + 1;
 				matrix[row * vertexs + i] = temp;
@@ -145,7 +161,7 @@ void Graph::autoGenerateGraph(int n, int percent)
 			row++;
 			col = row + 1;
 		}
-		if (matrix[row * vertexs + col] == 0 && rand() % 50 == 0)
+		if (matrix[row * vertexs + col] == INF && rand() % 50 == 0)
 		{
 			temp = rand() % (vertexs * 100 + 1);
 			matrix[row * vertexs + col] = temp;
@@ -162,6 +178,8 @@ void Graph::setGraph()
 {
 	if (!isEmpty())
 	{
+		vertInd.clear();
+		vertNames.clear();
 		delete[] matrix;
 		matrix = nullptr;
 		vertexs = 0;
@@ -173,6 +191,21 @@ void Graph::setGraph()
 	std::cin >> vertexs;
 
 	matrix = new int[vertexs * vertexs]();
+
+	for (int i = 0; i < vertexs; i++)
+	{
+		for (int j = 0; j < vertexs; j++)
+		{
+			if (i == j)
+			{
+				matrix[i * vertexs + j] = 0;
+			}
+			else
+			{
+				matrix[i * vertexs + j] = INF;
+			}
+		}
+	}
 
 	for (int i = 0; i < vertexs; i++)
 	{
@@ -220,7 +253,7 @@ void Graph::setGraph()
 					std::cout << "__________________________________________" << std::endl;
 					std::cout << "Введенная вершина не найдена. Повторите попытку." << std::endl;
 				}
-				else if (matrix[i * vertexs + vertInd[name]] || i == vertInd[name])
+				else if (matrix[i * vertexs + vertInd[name]] != INF || i == vertInd[name])
 				{
 					std::cout << "__________________________________________" << std::endl;
 					std::cout << "Введенная вершина уже связана с данной. Повторите попытку." << std::endl;
@@ -231,9 +264,9 @@ void Graph::setGraph()
 					std::cout << " и " << name << ": ";
 					std::cin >> weight;
 
-					if (weight <= 0)
+					if (weight < 0 || weight == INF)
 					{
-						std::cout << "Вес ребра не может быть 0 или отрицательным числом. Повторите попытку." << std::endl;
+						std::cout << "Вес ребра не может быть отрицательным числом. Повторите попытку." << std::endl;
 					}
 					else
 					{
@@ -278,7 +311,7 @@ void Graph::showAdjMatrix() const
 	std::cout << "  ";
 
 	for (int i = 0; i < vertexs; i++)
-		std::cout << std::setw(5) << vertNames[i];
+		std::cout << std::setw(7) << vertNames[i];
 
 	std::cout << std::endl << std::endl;
 
@@ -288,7 +321,14 @@ void Graph::showAdjMatrix() const
 
 		for (int j = 0; j < vertexs; j++)
 		{
-			std::cout << std::setw(5) << matrix[i * vertexs + j];
+			if (matrix[i * vertexs + j] == INF)
+			{
+				std::cout << std::setw(7) << "*";
+			}
+			else
+			{
+				std::cout << std::setw(7) << matrix[i * vertexs + j];
+			}
 		}
 
 		std::cout << std::endl;
