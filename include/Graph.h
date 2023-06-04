@@ -24,17 +24,17 @@ private:
 public:
 	/// <param name="V"> number of vertices </param>
 	/// <param name="E"> number of edges </param>
-	WeightedGraph(size_t V, size_t E);
+	WeightedGraph(int V, int E);
 
 	/// <!--getters-->
-	const size_t get_weight(size_t departure, size_t destination) const;
+	const size_t get_weight(int departure, int destination) const;
 	const size_t get_edges_num() const noexcept;
 	const size_t get_vertices_num() const noexcept;
 
 	bool is_connected();  // checking the graph for connectivity
 
 	/// adding a new edge when manually filling in a weighted graph
-	void add_edge(size_t departure, size_t destination, size_t weight);
+	void add_edge(int departure, int destination, int weight);
 
 	/// random filling of the graph (does not allow re-filling)
 	void random_fill();  
@@ -63,9 +63,9 @@ public:
 	/// <param name="S"> the starting vertex for Dijkstra's algorithm </param>
 	/// <param name="_graph"> the graph on which the shortest paths are searched </param>
 	/// <param name="_queue"> one of the priority queue implementations for Dijkstra's algorithm </param>
-	ShortestPaths(size_t S, const WeightedGraph& _graph, PriorityQueue<size_t, size_t>& _queue);
+	ShortestPaths(int S, const WeightedGraph& _graph, PriorityQueue<size_t, size_t>& _queue);
 
 	/// <!--getters-->
-	std::string get_shortest_path(size_t destination_vertex);
-	const size_t get_total_cost(size_t destination_vertex) const;
+	std::string get_shortest_path(int destination_vertex);
+	const size_t get_total_cost(int destination_vertex) const;
 };

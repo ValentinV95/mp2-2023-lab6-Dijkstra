@@ -1,6 +1,6 @@
 #include "Graph.h"
 
-WeightedGraph::WeightedGraph(size_t V, size_t E) : vertices_num(V), edges_num(E), add_edges_count(0)
+WeightedGraph::WeightedGraph(int V, int E) : vertices_num(V), edges_num(E), add_edges_count(0)
 {
 	if (vertices_num <= 0)
 	{
@@ -18,7 +18,7 @@ WeightedGraph::WeightedGraph(size_t V, size_t E) : vertices_num(V), edges_num(E)
 	}
 }
 
-const size_t WeightedGraph::get_weight(size_t departure, size_t destination) const
+const size_t WeightedGraph::get_weight(int departure, int destination) const
 {
 	if (destination < 0 || destination >= vertices_num || departure < 0 || departure >= vertices_num)
 	{
@@ -57,13 +57,17 @@ bool WeightedGraph::is_connected()
 	return true;
 }
 
-void WeightedGraph::add_edge(size_t departure, size_t destination, size_t weight)
+void WeightedGraph::add_edge(int departure, int destination, int weight)
 {
 	if (add_edges_count == edges_num)
 	{
 		throw std::exception("The graph is filled");
 	}
-	if (departure != destination && departure < vertices_num && destination < vertices_num && weight >= 0 && weight < INF)
+	if (weight < 0 || weight >= INF)
+	{
+		throw std::exception("Invalid value of weight");
+	}
+	if (departure != destination && departure >=0 && departure < vertices_num && destination >=0 && destination < vertices_num)
 	{
 		if (adjMatrix[departure][destination] != INF)
 		{
@@ -73,7 +77,7 @@ void WeightedGraph::add_edge(size_t departure, size_t destination, size_t weight
 		adjMatrix[destination][departure] = weight;
 		add_edges_count++;
 	}
-	else throw std::exception("Invalid input");
+	else throw std::exception("Invalid number of vertices");
 }
 void WeightedGraph::random_fill()
 {
@@ -178,7 +182,7 @@ void ShortestPaths::Dijkstra_algorithm(PriorityQueue<size_t, size_t>& relaxation
 	}
 }
 
-ShortestPaths::ShortestPaths(size_t S, const WeightedGraph& _graph, PriorityQueue<size_t, size_t>& _queue) : start_vertex(S), graph(_graph)
+ShortestPaths::ShortestPaths(int S, const WeightedGraph& _graph, PriorityQueue<size_t, size_t>& _queue) : start_vertex(S), graph(_graph)
 {
 	if (start_vertex < 0 || start_vertex >= graph.get_vertices_num())
 	{
@@ -189,7 +193,7 @@ ShortestPaths::ShortestPaths(size_t S, const WeightedGraph& _graph, PriorityQueu
 	Dijkstra_algorithm(_queue);
 }
 
-std::string ShortestPaths::get_shortest_path(size_t destination_vertex)
+std::string ShortestPaths::get_shortest_path(int destination_vertex)
 {
 	if (destination_vertex < 0 || destination_vertex >= vertices_number || destination_vertex == start_vertex)
 	{
@@ -216,7 +220,7 @@ std::string ShortestPaths::get_shortest_path(size_t destination_vertex)
 	return path;
 }
 
-const size_t ShortestPaths::get_total_cost(size_t destination_vertex) const
+const size_t ShortestPaths::get_total_cost(int destination_vertex) const
 {
 	if (destination_vertex < 0 || destination_vertex >= vertices_number || destination_vertex == start_vertex)
 	{

@@ -121,7 +121,7 @@ TEST(ShortestPaths, can_run_dijkstra_algorithm)
 	int weight = 5;
 	G.add_edge(0, 1, weight);
 	RedBlackTreeQueue<size_t, size_t> Q1;
-	DHeapQueue<2, size_t, size_t> Q2(5);
+	DHeapQueue<2, size_t, size_t> Q2;
 	BinomialHeapQueue<size_t, size_t> Q3;
 
 	ASSERT_NO_THROW(ShortestPaths SP1(0, G, Q1));
@@ -135,7 +135,7 @@ TEST(ShortestPaths, cant_run_dijkstra_algorithm_with_invalid_start_vertex)
 	int weight = 5;
 	G.add_edge(0, 1, weight);
 	RedBlackTreeQueue<size_t, size_t> Q1;
-	DHeapQueue<2, size_t, size_t> Q2(5);
+	DHeapQueue<2, size_t, size_t> Q2;
 	BinomialHeapQueue<size_t, size_t> Q3;
 
 	EXPECT_ANY_THROW(ShortestPaths SP1(-1, G, Q1));
@@ -150,7 +150,7 @@ TEST(ShortestPaths, can_get_shortest_path)
 {
 	WeightedGraph G(2, 1);
 	RedBlackTreeQueue<size_t, size_t> Q1;
-	DHeapQueue<2, size_t, size_t> Q2(5);
+	DHeapQueue<2, size_t, size_t> Q2;
 	BinomialHeapQueue<size_t, size_t> Q3;
 
 	int weight = 5;
@@ -170,7 +170,7 @@ TEST(ShortestPaths, cant_get_shortest_path_with_invalid_destination_vertex)
 {
 	WeightedGraph G(2, 1);
 	RedBlackTreeQueue<size_t, size_t> Q1;
-	DHeapQueue<2, size_t, size_t> Q2(5);
+	DHeapQueue<2, size_t, size_t> Q2;
 	BinomialHeapQueue<size_t, size_t> Q3;
 
 	int weight = 5;
@@ -195,7 +195,7 @@ TEST(ShortestPaths, can_get_total_cost)
 {
 	WeightedGraph G(2, 1);
 	RedBlackTreeQueue<size_t, size_t> Q1;
-	DHeapQueue<2, size_t, size_t> Q2(5);
+	DHeapQueue<2, size_t, size_t> Q2;
 	BinomialHeapQueue<size_t, size_t> Q3;
 
 	int weight = 5;
@@ -215,7 +215,7 @@ TEST(ShortestPaths, cant_get_total_cost_with_invalid_destination_vertex)
 {
 	WeightedGraph G(2, 1);
 	RedBlackTreeQueue<size_t, size_t> Q1;
-	DHeapQueue<2, size_t, size_t> Q2(5);
+	DHeapQueue<2, size_t, size_t> Q2;
 	BinomialHeapQueue<size_t, size_t> Q3;
 
 	int weight = 5;

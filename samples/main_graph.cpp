@@ -93,11 +93,11 @@ int main()
 	cout << "do NOT enter anything other than numbers!" << endl << endl;
 	cout << "Rules for entering a graph: " << endl;
 	cout << " 1 - The vertices of the graph are automatically numbered sequentially starting from zero" << endl;
-	cout << " 2 - The number of vertices and edges is greater than zero" << endl;
+	cout << " 2 - The number of vertices is greater than 1" << endl;
 	cout << " 3 - Acceptable values of edge weight: [0;";
 	cout << std::scientific << std::setprecision(0) << static_cast<double>(INF) << ")" << endl;
 	cout << " 4 - The value of edge weight must be an integer" << endl;
-	cout << " 5 - The graph must not contain loops" << endl;
+	cout << " 5 - The graph must not contain loops so the starting vertex cannot be equal to the destination vertex" << endl;
 	cout << " 6 - The graph must be connected, that is, each vertex must be connected to at least one other vertex" << endl;
 	cout << " 7 - It is forbidden to re-enter the same edge" << endl;
 
@@ -106,11 +106,12 @@ int main()
 
 	cout << "\nThe number of vertices of the graph: ";
 	input(vertices);
-	if (vertices <= 0)
+	if (vertices <= 1)
 	{
 		cout << "\nERROR: Invalid number of vertices";
 		return 1;
 	}
+	cout << "\nAcceptable values of edges number: [" << vertices - 1 << ";" << vertices * (vertices - 1) / 2 << "]" << endl;
 	cout << "\nThe number of edges of the graph: ";
 	input(edges);
 	if (edges < vertices - 1 || edges > vertices * (vertices - 1) / 2)
@@ -128,7 +129,13 @@ int main()
 	cout << "Number: ";
 	input(select);
 
-	if (select == 1) // manual filling
+	enum filling_methods {
+		MANUAL = 1,
+		RANDOM
+	};
+	switch (select)
+	{
+	case MANUAL:
 	{
 		cout << "\nAcceptable values of vertex numbers: [0;" << vertices << ")" << endl;
 		for (int i = 0; i < edges; i++)
@@ -157,21 +164,24 @@ int main()
 			{
 				G.add_edge(enter_departure, enter_destination, enter_weight);
 			}
-			catch(const std::exception& except)
+			catch (const std::exception& except)
 			{
 				cout << "ERROR: " << except.what() << endl;
 				return 1;
 			}
 		}
+		break;
 	}
-	else if (select == 2) // random filling
+	case RANDOM:
 	{
 		G.random_fill();
+		break;
 	}
-	else
+	default:
 	{
 		cout << "ERROR: Invalid number of filling method" << endl;
 		return 1;
+	}
 	}
 
 	enum priority_queue {
@@ -210,7 +220,7 @@ int main()
 		}
 		case DHEAP:
 		{
-			DHeapQueue<d, size_t, size_t> Q_Dheap(vertices * edges);
+			DHeapQueue<d, size_t, size_t> Q_Dheap;
 			ShortestPaths SP(start, G, Q_Dheap);
 			do_actions(G, SP);
 			break;

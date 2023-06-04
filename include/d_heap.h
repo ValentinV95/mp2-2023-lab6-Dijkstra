@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "priority_queue.h"
 
 template <int D, class P, class T>
@@ -11,18 +13,20 @@ private:
 		P priority;
 		T data;
 	};
-	Node* pMem;
-	size_t capacity;
-	size_t size;
+	std::vector<Node> pMem;
 
+	void swap(size_t first, size_t second)
+	{
+		Node tmp = pMem[first];
+		pMem[first] = pMem[second];
+		pMem[second] = tmp;
+	}
 	void sift_up(size_t index)
 	{
 		size_t parent = (index - 1) / D;
 		while (index != 0 && pMem[index].priority < pMem[parent].priority)
 		{
-			Node tmp = pMem[index];
-			pMem[index] = pMem[parent];
-			pMem[parent] = tmp;
+			swap(index, parent);
 			index = parent;
 			parent = (index - 1) / D;
 		}
@@ -30,15 +34,11 @@ private:
 	size_t get_min_child(size_t index)
 	{
 		size_t min_child = index * D + 1;
-		for (int i = 2; i < D + 1 && min_child < size; i++)
+		for (int i = 2; i < D + 1 && index * D + i < pMem.size(); i++)
 		{
 			if (pMem[index * D + i].priority < pMem[min_child].priority)
 			{
-				if (index * D + i < size)
-				{
-					min_child = index * D + i;
-				}
-				else break;
+				min_child = index * D + i;
 			}
 		}
 		return min_child;
@@ -46,39 +46,22 @@ private:
 	void sift_down(size_t index)
 	{
 		size_t child = get_min_child(index);
-		
-		while (index * D + 1 < size && pMem[index].priority > pMem[child].priority)
+		while (child < pMem.size() && pMem[index].priority > pMem[child].priority)
 		{
-			Node tmp = pMem[index];
-			pMem[index] = pMem[child];
-			pMem[child] = tmp;
-			
+			swap(index, child);
 			index = child;
 			child = get_min_child(index);
 		}
 	}
 public:
-	DHeapQueue(size_t sz) : capacity(sz), size(0)
-	{
-		if (sz <= 0)
-		{
-			throw std::exception("Heap size should be greater than zero");
-		}
-		else pMem = new Node[capacity];
-	}
-
 	void insert(const P& _priority, const T& _data) override
 	{
-		if (size == capacity)
-		{
-			throw std::exception("Queue overflow");
-		}
-		pMem[size] = Node{ _priority, _data };
-		sift_up(size++);
+		pMem.push_back(Node{ _priority, _data });
+		sift_up(pMem.size() - 1);
 	}
 	const T& get_min() const override
 	{
-		if (size == 0)
+		if (pMem.empty())
 		{
 			throw std::exception("Queue is empty");
 		}
@@ -86,16 +69,12 @@ public:
 	}
 	void extract_min() override
 	{
-		if (size == 0)
+		if (pMem.empty())
 		{
 			throw std::exception("Queue is empty");
 		}
-		pMem[0] = pMem[--size];
+		swap(0, pMem.size() - 1);
+		pMem.pop_back();
 		sift_down(0);
-	}
-
-	~DHeapQueue()
-	{
-		delete[] pMem;
 	}
 };
