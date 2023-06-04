@@ -41,13 +41,16 @@ Graph createGraph()
 
 	if (choos)
 	{
-		random_device r;
-		vertexCount = r() % 15 + 5;
-		size_t maxVertexCount = (vertexCount * (vertexCount - 1) / 2);
-		size_t edgeCount = (vertexCount - 1) + (maxVertexCount - r() % (maxVertexCount -2));
+		size_t maxEdgeCount;
+		size_t edgeCount;
+
+		cout << "Enter vertex count: " ;
+		cin >> vertexCount;
+		cout << "Enter edge count: ";
+		cin >> edgeCount;
 
 		graph = Graph(vertexCount, edgeCount);
-		cout << graph;
+		graph.printTable();
 	}
 	else
 	{
@@ -81,61 +84,81 @@ Graph createGraph()
 void main()
 {
 	size_t vertexCount;
-	size_t start;
-	string choos = "reset";
+	size_t start = 0;
+	string choos = "start";
 	double fullnessPersent = 0.0;
 
-	Graph graph; /*= createGraph()*/;
-	QueueType queueType = FibonacciHep;/* = setQueueType()*/;
+	setlocale(LC_ALL, "Russian");
 
-	Dijkstra dijkstra(graph,0,queueType);
+	cout << "--------------------------INFO--------------------------" << endl;
+	cout << "\tГраф:" << endl  
+		<< "\t--Для алгоритма Дейкстры необходим связный граф с неотрицательными весами ребер" << endl
+		<< "\t--Вершины графа именуются числами от нуля до число вершин минус один" << endl
+		<< "\t--В матрице смежности отображается стоимость пути из одной вершины в другую," << endl
+		<< "\tесли пути нет выводится буква n" << endl
+		<<"\t--Введенные отрицательные веса ребер и имена вершин буду восприниматься как " << endl
+		<< "\tочень большое целое положительное число"<< endl
+		<< endl;
+	cout << "\tОперации:" << endl
+		<< "\t--Задать начальную току -- введите start" << endl
+		<< "\t--Напечатать матрицу межности графа -- введите print" << endl
+		<< "\t--Найти гратчайший путь из начальной точки в заданнуюю -- введите way" << endl;
+	cout << "--------------------------------------------------------" << endl;
+
+	Graph graph = createGraph();
+	QueueType queueType = setQueueType();
+
+	Dijkstra dijkstra(graph,start,queueType);
 
 	while (choos != "end")
 	{
-		if (choos == "reset")
+		try
 		{
-			Graph graph = createGraph();
-			cout << graph <<endl;
-
-			QueueType queueType = setQueueType();
-			size_t start = 0;
-			cout << "Choose start: ";
-			cin >> start;
-		}
-		else if (choos == "print")
-		{
-			cout << graph;
-		}
-		else if (choos == "way")
-		{
-			size_t v,wayCost = 0;
-			cout << "Choose vertex: ";
-			cin >> v;
-			stack<GraphNode> way = dijkstra.getWay(v);
-
-
-			while (!way.empty())
+			if (choos == "print")
 			{
-				cout << way.top().current << " ";
-				wayCost += way.top().weight;
-				way.pop();
+				graph.printTable();
+			}
+			else if (choos == "way")
+			{
+				size_t v, wayCost = 0;
+
+				cout << "Choose vertex: ";
+				cin >> v;
+
+				stack<GraphNode> way = dijkstra.getWay(v);
+
+				while (!way.empty())
+				{
+					cout << way.top().current << " ";
+					wayCost = way.top().weight;
+					way.pop();
+				}
+
+				if(start != v)
+					cout << " total cost: " << wayCost << endl;
+				else
+					cout << v << v << " total cost: " << 0 << endl;
+			}
+			else if (choos == "start")
+			{
+				size_t v;
+				cout << "Choose start: ";
+				cin >> v;
+
+				dijkstra.setStart(v);
+				start = v;
+			}
+			else
+			{
+				cout << "Uncnown option" << endl;
 			}
 
-			cout << " total cost: " << wayCost<<endl;
+			cout << "Enter option: " << endl;
+			cin >> choos;
 		}
-		else if(choos == "start")
+		catch (exception& exc)
 		{
-			size_t v;
-			cout << "Choose start: ";
-			cin >> v;
-			dijkstra.setStart(v);
+			cout << exc.what() << std::endl;
 		}
-		else
-		{
-			cout << "Uncnown option" << endl;
-		}
-
-		cout << "Enter option: " << endl;
-		cin >> choos;
 	}
 }

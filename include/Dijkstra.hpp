@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <random>
 #include <map>
+#include <string>
+#include<cmath>
 
 #include "IPriorityQueue.hpp"
 #include "TBinomialTree.hpp"
@@ -11,7 +13,7 @@
 #include "TRbTree.hpp"
 #include "Dijkstra.hpp"
 
-#define INF SIZE_MAX
+#define INF SIZE_MAX //Связи между вершинами нет
 #define MAX_RANDOM_WAY_COST 10 
 
 using namespace std;
@@ -65,9 +67,11 @@ class Dijkstra
 	map<size_t, GraphNode> S;
 	size_t start;
 	QueueType queueType;
+
+	void graphChek();
 public:
 	Dijkstra(const Graph& g, size_t start, QueueType queueType);
 	void setStart(const size_t& v);
-	stack<GraphNode> getWay(const size_t& v) const;
+	stack<GraphNode> getWay(size_t v);
 	~Dijkstra();
 };

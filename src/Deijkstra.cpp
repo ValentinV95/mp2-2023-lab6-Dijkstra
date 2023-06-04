@@ -34,28 +34,23 @@ Graph::Graph(const Graph& graph)
 
 Graph::Graph(size_t vertexCount, size_t edgeCount) :vertexCount(vertexCount), edgeCount(edgeCount), adjMatrix(vertexCount)
 {
+	if (edgeCount < (vertexCount - 1))
+		throw exception("Not enough edge to create connected graph");
+
+	if(edgeCount > (vertexCount*(vertexCount-1)/2))
+		throw exception("To large edge count");
+
 	for (vector<size_t>& vec : adjMatrix)
-	{
-		vec.resize(vertexCount, 0);
-	}
+		vec.resize(vertexCount, INF);
 
 	for (int i = 0; i < vertexCount; i++)
-	{
-		for (size_t j = 0; j < vertexCount; j++)
-		{
-			if (i != j)
-				adjMatrix[i][j] = INF;
-		}
-	}
+		adjMatrix[i][i] = 0;
 
 	createCompliteGraph();
 
-	size_t maxEdgeCount = vertexCount * (vertexCount - 1) / 2;
 	size_t currentEdgeCount = vertexCount - 1;
 
 	random_device r;
-	default_random_engine eng(r());
-
 	size_t v1, v2;
 
 	while (currentEdgeCount <= edgeCount)
@@ -91,7 +86,7 @@ Graph::Graph(size_t vertexCount):vertexCount(vertexCount), edgeCount(edgeCount),
 void Graph::addEdge(const size_t& v1, const size_t& v2, size_t weight)
 {
 	if (v1 == v2)
-		throw exception("");
+		throw exception("It is impossible to set the price of the path from the vertex to itself");
 
 	adjMatrix[v1][v2] = weight;
 	adjMatrix[v2][v1] = weight;
@@ -117,19 +112,42 @@ vector<pair<size_t, size_t>> Graph::getSiblings(const size_t& v)  const
 
 void Graph::printTable()  const
 {
-	cout << "  ";
-	for (size_t j = 0; j < vertexCount; j++)
-		cout << j << " ";
-	cout << endl;
+	size_t max = 0;
+	size_t padding;
+
 	for (int i = 0; i < vertexCount; i++)
 	{
-		cout << i << " ";
+		for (size_t j = 0; j < vertexCount; j++)
+		{
+			if (adjMatrix[i][j] != INF && max < adjMatrix[i][j])
+				max = adjMatrix[i][j];
+		}
+	}
+
+	if (trunc(log10(max)) + 1 > trunc(log10(vertexCount)) + 1)
+	{
+		padding = trunc(log10(max)) + 2;
+	}
+	else
+	{
+		padding = trunc(log10(vertexCount)) + 2;
+	}
+
+	cout << setw(padding) << " " <<" ";
+	for (size_t j = 0; j < vertexCount; j++)
+		cout << setw(padding) << j << "|";
+	cout << endl << endl;
+
+	for (int i = 0; i < vertexCount; i++)
+	{
+		cout << setw(padding) <<  i<< " ";
+
 		for (size_t j = 0; j < vertexCount; j++)
 			if (adjMatrix[i][j] != INF)
-				cout << adjMatrix[i][j] << " ";
+				cout << setw(padding) << adjMatrix[i][j] << "|";
 			else
-				cout << "n ";
-		cout << endl;
+				cout << setw(padding) <<"n" << "|";
+		cout << setw(padding) << endl;
 	}
 }
 
@@ -188,7 +206,6 @@ bool GraphNode::operator >= (const GraphNode& node) const
 }
 
 //DEIJKSTRA
-
 Dijkstra::Dijkstra(const Graph& g, size_t start, QueueType queueType) :g(g), start(start), queueType(queueType)
 {
 	switch (queueType)
@@ -211,6 +228,10 @@ Dijkstra::Dijkstra(const Graph& g, size_t start, QueueType queueType) :g(g), sta
 
 void Dijkstra::setStart(const size_t& v)
 {
+	S.clear();
+
+	graphChek();
+
 	start = v;
 
 	vector<pair<size_t, size_t>> siblings;
@@ -241,9 +262,6 @@ void Dijkstra::setStart(const size_t& v)
 				D->extractMin();
 			}
 		}
-
-		if (D->isEmpty() && S.size() < g.getVertexCount())
-			throw exception("Graph is not complite");
 	}
 
 	while (!D->isEmpty())
@@ -252,24 +270,56 @@ void Dijkstra::setStart(const size_t& v)
 	}
 }
 
-stack<GraphNode> Dijkstra::getWay(const size_t& v) const
+stack<GraphNode> Dijkstra::getWay(size_t v)
 {
 	if (S.empty())
 		throw exception("Start hav not been seted");
 
+	if (v >= g.getVertexCount())
+		throw exception("Uncorrect vertex name");
+
 	stack<GraphNode> way;
-	way.push((*S.find(v)).second);
+	way.push(S[v]);
 
 	while (way.top().current != start)
 	{
 		size_t from = way.top().from;
-		way.push((*S.find(from)).second);
+		way.push(S[from]);
 	}
 
 	return way;
 }
 
-Dijkstra::~Dijkstra() {}
+Dijkstra::~Dijkstra() { delete queue; }
+
+void Dijkstra::graphChek()
+{
+	stack<size_t> vertexes;
+	map<size_t,size_t> visitedVertexes;
+	vector<pair<size_t, size_t>> siblings = g.getSiblings(0);
+
+	for (int i=0;i<siblings.size();i++)
+	{
+		vertexes.push(siblings[i].first);
+	}
+
+	while (!vertexes.empty())
+	{
+		if (visitedVertexes.count(vertexes.top()) == 0)
+			visitedVertexes.insert(make_pair(vertexes.top(),0));
+
+		siblings = g.getSiblings(vertexes.top());
+
+		for (int i = 0; i < siblings.size(); i++)
+			vertexes.push(siblings[i].first);
+
+		while(!vertexes.empty() && visitedVertexes.count(vertexes.top()) != 0)
+			vertexes.pop();
+	}
+
+	if (visitedVertexes.size() < g.getVertexCount())
+		throw invalid_argument("The graph is not connected");
+}
 
 
 
