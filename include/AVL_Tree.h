@@ -273,6 +273,7 @@ public:
 
 	Node* minNode(Node* root_subtree)
 	{
+		this->show();
 		Node* i = root_subtree;
 		for (; i->left != nullptr; i = i->left) {}
 
@@ -382,7 +383,7 @@ public:
 		std::cout << std::string(60, '-') << std::endl;
 		std::cout << std::setw(20) << std::left << "| " + t->key;
 		std::cout << "| ";
-		t->value.show();
+		std::cout << t->key;
 		std::cout << '\n';
 		std::cout << std::string(60, '-') << std::endl;
 	}

@@ -67,13 +67,13 @@ int main()
     DHeap<size_t, size_t, 2> structure_DH;
     BinomHeap<size_t, size_t> structure_BH;
 
-    AlgDijkstra D1(G, &structure_AVL, start_vertex);
+    //AlgDijkstra D1(G, &structure_AVL, start_vertex);
     AlgDijkstra D2(G, &structure_DH, start_vertex);
     //AlgDijkstra D3(G, &structure_BH, start_vertex);
     switch (choose)
     {
     case 1:
-        AlgD(D1, G);
+        //AlgD(D1, G);
         break;
     case 2:
         AlgD(D2, G);
