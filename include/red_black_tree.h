@@ -23,6 +23,7 @@ private:
     {
         if (root == nil) return nullptr;
         Node* node = root;
+        Node* equal = nil;
         while (node != nil)
         {
             if (_key < node->key)
@@ -33,7 +34,15 @@ private:
             {
                 node = node->right;
             }
-            else return node;
+            else 
+            {
+                equal = node;
+                node = node->left;
+            }
+        }
+        if (equal != nil)
+        {
+            return equal;
         }
         return nullptr;
     }
@@ -358,13 +367,18 @@ private:
                 fix_remove(node);
             }
         }
-        delete node;
+        //delete node;
     }
 public:
     RedBlackTreeQueue()
     {
         nil = new Node{ Color::black };
         root = nil;
+    }
+
+    bool empty() const override
+    {
+        return root == nil;
     }
 
     const T& get_min() const override
@@ -383,7 +397,7 @@ public:
             return;
         }
         Node* node = root;
-        while (_key != node->key)
+        while (node != nil)
         {
             if (_key <= node->key)
             {

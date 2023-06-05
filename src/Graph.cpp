@@ -163,12 +163,10 @@ void ShortestPaths::Dijkstra_algorithm(PriorityQueue<size_t, size_t>& relaxation
 
 	relaxation_queue.insert(0, start_vertex);
 
-	int relaxation_counter = 0;
-	while (relaxation_counter < vertices_number)
+	while (!relaxation_queue.empty())
 	{
 		size_t current = relaxation_queue.get_min();
 		relaxation_queue.extract_min();
-		relaxation_counter++;
 
 		for (size_t i = 0; i < vertices_number; i++)
 		{

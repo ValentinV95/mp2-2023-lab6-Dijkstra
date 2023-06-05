@@ -138,6 +138,10 @@ private:
 public:
 	BinomialHeapQueue() : head(nullptr), minimum(nullptr), prev_minimum(nullptr) {}
 	
+	bool empty() const override
+	{
+		return minimum == nullptr;
+	}
 	void insert(const P& _priority, const T& _data) override
 	{
 		BinomialHeapQueue<P, T> inserted;

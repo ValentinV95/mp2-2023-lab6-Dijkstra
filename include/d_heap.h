@@ -54,6 +54,10 @@ private:
 		}
 	}
 public:
+	bool empty() const override
+	{
+		return pMem.empty();
+	}
 	void insert(const P& _priority, const T& _data) override
 	{
 		pMem.push_back(Node{ _priority, _data });
