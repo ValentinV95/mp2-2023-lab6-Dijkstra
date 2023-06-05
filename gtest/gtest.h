@@ -50,6 +50,8 @@
 
 #define _VARIADIC_MAX 10
 
+#pragma warning(disable: 4996)
+
 #ifndef GTEST_INCLUDE_GTEST_GTEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_H_
 
