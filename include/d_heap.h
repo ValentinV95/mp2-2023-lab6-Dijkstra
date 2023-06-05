@@ -65,7 +65,7 @@ public:
 	}
 	const T& get_min() const override
 	{
-		if (pMem.empty())
+		if (empty())
 		{
 			throw std::exception("Queue is empty");
 		}
@@ -73,7 +73,7 @@ public:
 	}
 	void extract_min() override
 	{
-		if (pMem.empty())
+		if (empty())
 		{
 			throw std::exception("Queue is empty");
 		}

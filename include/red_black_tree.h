@@ -48,11 +48,11 @@ private:
     }
     Node* get_min_node() const
     {
-        Node* node = root;
-        if (node == nil)
+        if (empty())
         {
             throw std::exception("Queue is empty");
         }
+        Node* node = root;
         while (node->left != nil)
         {
             node = node->left;
@@ -367,7 +367,7 @@ private:
                 fix_remove(node);
             }
         }
-        //delete node;
+        delete node;
     }
 public:
     RedBlackTreeQueue()

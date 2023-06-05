@@ -152,7 +152,7 @@ public:
 	}
 	const T& get_min() const override
 	{
-		if (minimum == nullptr)
+		if (empty())
 		{
 			throw std::exception("Queue is empty");
 		}
@@ -160,7 +160,7 @@ public:
 	}
 	void extract_min() override
 	{
-		if (minimum == nullptr)
+		if (empty())
 		{
 			throw std::exception("Queue is empty");
 		}
