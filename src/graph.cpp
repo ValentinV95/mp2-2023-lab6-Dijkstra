@@ -264,9 +264,9 @@ void Graph::setGraph()
 					std::cout << " и " << name << ": ";
 					std::cin >> weight;
 
-					if (weight < 0 || weight == INF)
+					if (weight <= 0 || weight == INF)
 					{
-						std::cout << "Вес ребра не может быть отрицательным числом. Повторите попытку." << std::endl;
+						std::cout << "Вес ребра не может быть отрицательным числом или нулем. Повторите попытку." << std::endl;
 					}
 					else
 					{

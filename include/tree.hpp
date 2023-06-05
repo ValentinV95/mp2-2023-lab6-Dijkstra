@@ -344,9 +344,7 @@ void Tree<T>::push(const T& var)
 		{
 			slow = fast;
 
-			if (var == fast->data) return;
-
-			else if (var > fast->data)
+			if (var > fast->data)
 			{
 				if (fast->right)
 				{

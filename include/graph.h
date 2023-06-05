@@ -23,8 +23,8 @@ private:
 public:
 	Graph();                                     // Конструктор по умолчанию
 	~Graph();                                    // Деструктор
-	int vertSize() const;                     // Количество вершин
-	int edgSize() const;                       // Количество ребер
+	int vertSize() const;                        // Количество вершин
+	int edgSize() const;                         // Количество ребер
 	bool isEmpty() const;                        // Проверка на пустоту
 	bool check() const;                          // Проверка на связность графа
 	void autoGenerateGraph(int, int);            // Генерация графа
