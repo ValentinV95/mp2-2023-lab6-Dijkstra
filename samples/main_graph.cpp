@@ -94,11 +94,11 @@ int main()
 	cout << "Rules for entering a graph: " << endl;
 	cout << " 1 - The vertices of the graph are automatically numbered sequentially starting from zero" << endl;
 	cout << " 2 - The number of vertices is greater than 1" << endl;
-	cout << " 3 - Acceptable values of edge weight: [0;";
+	cout << " 3 - Acceptable values of edge weight: (0;";
 	cout << std::scientific << std::setprecision(0) << static_cast<double>(INF) << ")" << endl;
 	cout << " 4 - The value of edge weight must be an integer" << endl;
 	cout << " 5 - The graph must not contain loops so the starting vertex cannot be equal to the destination vertex" << endl;
-	cout << " 6 - The graph must be connected, that is, each vertex must be connected to at least one other vertex" << endl;
+	cout << " 6 - The graph must be connected" << endl;
 	cout << " 7 - It is forbidden to re-enter the same edge" << endl;
 
 	int vertices;
@@ -147,14 +147,14 @@ int main()
 			input(enter_departure);
 			if (enter_departure < 0 || enter_departure >= vertices)
 			{
-				cout << "ERROR: " << "Invalid vertex number" << endl;
+				cout << "ERROR: Invalid vertex number" << endl;
 				return 1;
 			}
 			cout << "\nEnter number of destination vertex: ";
 			input(enter_destination);
-			if (enter_destination < 0 || enter_destination >= vertices)
+			if (enter_destination < 0 || enter_destination >= vertices || enter_departure == enter_destination)
 			{
-				cout << "ERROR: " << "Invalid vertex number" << endl;
+				cout << "ERROR: Invalid vertex number" << endl;
 				return 1;
 			}
 			cout << "\nEnter edge weight: ";

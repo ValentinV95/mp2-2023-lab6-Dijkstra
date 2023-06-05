@@ -63,7 +63,7 @@ void WeightedGraph::add_edge(int departure, int destination, int weight)
 	{
 		throw std::exception("The graph is filled");
 	}
-	if (weight < 0 || weight >= INF)
+	if (weight <= 0 || weight >= INF)
 	{
 		throw std::exception("Invalid value of weight");
 	}
@@ -100,7 +100,7 @@ void WeightedGraph::random_fill()
 	{
 		if (count < 2)
 		{
-			rand_weight = rand() % 100;
+			rand_weight = (rand() % 99) + 1;
 			adjMatrix[arr[root]][arr[i]] = rand_weight;
 			adjMatrix[arr[i]][arr[root]] = rand_weight;
 			count++;
@@ -119,7 +119,7 @@ void WeightedGraph::random_fill()
 	{
 		rand_departure = rand() % vertices_num;
 		rand_destination = rand() % vertices_num;
-		rand_weight = rand() % 100;
+		rand_weight = (rand() % 99) + 1;
 		if (rand_departure != rand_destination && adjMatrix[rand_departure][rand_destination] == INF)
 		{
 			adjMatrix[rand_departure][rand_destination] = rand_weight;

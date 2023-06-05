@@ -66,12 +66,14 @@ TEST(WeightedGraph, cant_add_edge_with_invalid_parameters)
 	int weight = 5;
 	int wrong_weight_1 = -1;
 	int wrong_weight_2 = INF;
+	int wrong_weight_3 = 0;
 	EXPECT_ANY_THROW(G.add_edge(2, 1, weight));
 	EXPECT_ANY_THROW(G.add_edge(0, 2, weight));
 	EXPECT_ANY_THROW(G.add_edge(-1, 1, weight));
 	EXPECT_ANY_THROW(G.add_edge(0, -1, weight));
 	EXPECT_ANY_THROW(G.add_edge(0, 1, wrong_weight_1));
 	EXPECT_ANY_THROW(G.add_edge(0, 1, wrong_weight_2));
+	EXPECT_ANY_THROW(G.add_edge(0, 1, wrong_weight_3));
 }
 
 TEST(WeightedGraph, cant_add_too_many_edges)
