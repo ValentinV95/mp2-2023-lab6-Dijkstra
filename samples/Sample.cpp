@@ -10,7 +10,7 @@ int main() {
 	do {
 		try {
 			cout << "Choose your action:\n";
-			cout << "\t1)randomly generate your graph\n";
+			cout << "\t1)randomly generate connected graph\n";
 			cout << "\t2)add new vertex to graph\n";
 			cout << "\t3)remove vertex from graph\n";
 			cout << "\t4)add new edge to graph\n";
@@ -90,7 +90,7 @@ int main() {
 						G.Dijkstra(str1);
 					cout << "Shortest path beween " << str1 << " and " << str2 << " : " << G.path(str2) << "\n";
 				}
-				catch (exception& e) {
+				catch (logic_error& l) {
 					G.Dijkstra(str1);
 					cout << "Shortest path beween " << str1 << " and " << str2 << " : " << G.path(str2) << "\n";
 				}
@@ -113,7 +113,8 @@ int main() {
 			}
 		}
 		catch (std::exception& e) {
-			std::cout << e.what();
+			system("cls");
+			std::cout << e.what() << "\n\n";
 		}
 	} while (choose);
 }

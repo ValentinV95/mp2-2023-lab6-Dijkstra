@@ -1,5 +1,6 @@
 #include "gtest.h"
 #include "Graph.h"
+#include <string>
 
 TEST(Graph, can_create_Graph) {
 	ASSERT_NO_THROW(Graph G);
@@ -22,6 +23,12 @@ TEST(Graph, throw_when_do_addE_to_non_existent_vertex) {
 	G.addV("A");
 	G.addV("B");
 	ASSERT_ANY_THROW(G.addE("A", "C", 5));
+}
+
+TEST(Graph, throw_when_create_loop) {
+	Graph G;
+	G.addV("A");
+	ASSERT_ANY_THROW(G.addE("A", "A", 5));
 }
 
 TEST(Graph, can_delV) {
@@ -71,6 +78,22 @@ TEST(Graph, can_clear_empty_graph) {
 	ASSERT_NO_THROW(G.clear());
 }
 
+TEST(Graph, can_check_connected) {
+	Graph G;
+	ASSERT_NO_THROW(G.check_connected());
+}
+
+TEST(Graph, check_connected_is_correct) {
+	Graph G;
+	for (int i = 0; i < 3; i++) {
+		G.addV(std::to_string(i));
+	}
+	EXPECT_FALSE(G.check_connected());
+	G.addE("0", "1", 2);
+	G.addE("2", "0", -3);
+	EXPECT_TRUE(G.check_connected());
+}
+
 TEST(Graph, can_create_rnd_graph) {
 	Graph G;
 	ASSERT_NO_THROW(G.rnd(5, 60));
@@ -87,26 +110,26 @@ TEST(Graph, rnd_throws_when_percentE_leass_than_zero_or_greater_than_100) {
 	ASSERT_ANY_THROW(G.rnd(5, 101));
 }
 
+TEST(Graph, rnd_generates_connected_graph) {
+	Graph G;
+	G.rnd(10, 20);
+	EXPECT_TRUE(G.check_connected());
+}
+
+TEST(Graph, rnd_throws_when_he_cant_generate_connected_graph) {
+	Graph G;
+	ASSERT_ANY_THROW(G.rnd(10, 19));
+}
+
 TEST(Graph, check_Dijkstra_is_correct) {
 	Graph G;
-	G.rnd(5, 0);
+	for (int i = 0; i < 3; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 5);
 	EXPECT_TRUE(G.check_Dijkstra());
 	G.addE("0", "2", -5);
 	EXPECT_FALSE(G.check_Dijkstra());
-}
-
-TEST(Graph, can_check_connected) {
-	Graph G;
-	ASSERT_NO_THROW(G.check_connected());
-}
-
-TEST(Graph, check_connected_is_correct) {
-	Graph G;
-	G.rnd(10, 19);
-	EXPECT_FALSE(G.check_connected());
-	G.rnd(10, 83);
-	EXPECT_TRUE(G.check_connected());
 }
 
 TEST(Graph, throw_when_used_path_from_graphs_that_wasnt_used_Dijkstra) {
@@ -117,7 +140,9 @@ TEST(Graph, throw_when_used_path_from_graphs_that_wasnt_used_Dijkstra) {
 
 TEST(Graph, can_run_Dijkstra) {
 	Graph G;
-	G.rnd(10, 0);
+	for (int i = 0; i < 3; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 3);
 	ASSERT_NO_THROW(G.Dijkstra("0"));
 
@@ -125,14 +150,18 @@ TEST(Graph, can_run_Dijkstra) {
 
 TEST(Graph, throw_when_used_Dijkstra_at_grath_with_negative_vertices) {
 	Graph G;
-	G.rnd(10, 0);
+	for (int i = 0; i < 3; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", -3);
 	ASSERT_ANY_THROW(G.Dijkstra("0"));
 }
 
 TEST(Graph, Dijkstra_founds_min_paths) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 101);
 	G.addE("0", "2", 4);
 	G.addE("0", "3", 5);
@@ -152,7 +181,9 @@ TEST(Graph, Dijkstra_founds_min_paths) {
 
 TEST(Graph, addV_invalidates_the_result_of_algorithm) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 101);
 	G.addE("0", "2", 4);
 	G.addE("0", "3", 5);
@@ -168,7 +199,9 @@ TEST(Graph, addV_invalidates_the_result_of_algorithm) {
 
 TEST(Graph, delV_invalidates_the_result_of_algorithm) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 101);
 	G.addE("0", "2", 4);
 	G.addE("0", "3", 5);
@@ -184,7 +217,9 @@ TEST(Graph, delV_invalidates_the_result_of_algorithm) {
 
 TEST(Graph, addE_invalidates_the_result_of_algorithm) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 101);
 	G.addE("0", "2", 4);
 	G.addE("0", "3", 5);
@@ -200,7 +235,9 @@ TEST(Graph, addE_invalidates_the_result_of_algorithm) {
 
 TEST(Graph, delE_invalidates_the_result_of_algorithm) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.addE("0", "1", 101);
 	G.addE("0", "2", 4);
 	G.addE("0", "3", 5);
@@ -216,7 +253,9 @@ TEST(Graph, delE_invalidates_the_result_of_algorithm) {
 
 TEST(Graph, rnd_invalidates_the_result_of_algorithm) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.Dijkstra("0");
 	G.rnd(5, 60);
 	ASSERT_ANY_THROW(G.path("0"));
@@ -224,7 +263,9 @@ TEST(Graph, rnd_invalidates_the_result_of_algorithm) {
 
 TEST(Graph, clear_invalidates_the_result_of_algorithm) {
 	Graph G;
-	G.rnd(6, 0);
+	for (int i = 0; i < 6; i++) {
+		G.addV(std::to_string(i));
+	}
 	G.Dijkstra("0");
 	G.clear();
 	ASSERT_ANY_THROW(G.path("0"));

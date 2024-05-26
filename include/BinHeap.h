@@ -55,7 +55,7 @@ class BinHeap {
 		}
 		int i;
 		for (i = 0; mas[i]==nullptr; i++);
-		head = mas[i];
+		head = mas[i++];
 		nd = head;
 		for (i;i<int(floor(log(size) / log(2))) + 2; i++) {
 			if (mas[i]) {
@@ -114,7 +114,7 @@ public:
 			Node* nd = &fict, * min = &fict;
 			while (nd->r)
 			{
-				if (nd->r->data < min->data) min = nd;
+				if (nd->r->data < min->r->data) min = nd;
 				nd = nd->r;
 			}
 			if (min->r == head) head = head->r;
