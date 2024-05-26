@@ -80,6 +80,7 @@ class FibHeap {
 			nd->r = tmp;
 			tmp->l = nd;
 			H.head = nullptr;
+			delete[]mas;
 		}
 	}
 public:

@@ -65,6 +65,7 @@ class BinHeap {
 		}
 		nd->r = nullptr;
 		H.head = nullptr;
+		delete[] mas;
 	}
 public:
 	BinHeap() : head(nullptr), size(0) {};
