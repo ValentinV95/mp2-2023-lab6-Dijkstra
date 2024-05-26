@@ -80,3 +80,40 @@ TEST(FHeap, can_check_empty)
 	h.pop();
 	ASSERT_TRUE(h.empty());
 }
+
+TEST(FHeap, can_insert_into_emptied_heap)
+{
+	FHeap<int> h;
+	h.push(42);
+	h.push(43);
+	h.push(44);
+	h.push(45);
+	h.pop();
+	h.pop();
+	h.pop();
+	h.pop();
+	h.push(111);
+	EXPECT_EQ(111, h.top());
+	EXPECT_EQ(1, h.size());
+}
+
+// A rather bad heapsort implementation for testing out the heap functions
+TEST(FHeap, heapsort_test)
+{
+	std::vector<int> v(100);
+	std::generate(v.begin(), v.end(), std::rand);
+	std::vector<int> res;
+	FHeap<int> h;
+
+	for (auto& i : v)
+		h.push(i);
+
+	for (int i = 0; i < v.size(); i++)
+	{
+		res.push_back(h.top());
+		h.pop();
+	}
+
+	for (int i = 0; i < res.size() - 1; i++)
+		ASSERT_TRUE(res[i] <= res[i + 1]);
+}

@@ -10,7 +10,7 @@ template<class T>
 class BHeap
 {
 public:
-	BHeap() : _min(nullptr), sz(0) {}
+	BHeap() : sz(0), _min(root.end()) {}
 
 	BHeap(const BHeap& h) : sz(h.sz)
 	{
@@ -86,7 +86,7 @@ public:
 		return *this;
 	}
 
-	const T& top() const { return _min->val; }
+	const T& top() const { return (*_min)->val; }
 	int size() const { return sz; }
 	bool empty() const { return sz == 0; }
 
@@ -104,10 +104,7 @@ public:
 		if (sz == 0)
 			return;
 
-		auto m = root.begin();
-		for (; m != root.end() && *m != _min; ++m);
-
-		Node* deleted = *m;
+		Node* deleted = *_min;
 		Node* tmp = deleted->child;
 		int c = deleted->deg;
 		std::list<Node*> h;
@@ -118,7 +115,7 @@ public:
 			tmp = tmp->right;
 		}
 
-		root.erase(m);
+		root.erase(_min);
 		delete deleted;
 		deleted = nullptr;
 
@@ -239,14 +236,14 @@ private:
 		if (root.empty())
 			return;
 
-		_min = *root.begin();
+		_min = root.begin();
 		for (auto it = root.begin(); it != root.end(); ++it)
-			if ((*it)->val < _min->val)
-				_min = *it;
+			if ((*it)->val < (*_min)->val)
+				_min = it;
 	}
 
 	std::list<Node*> root;
-	Node* _min;
+	typename std::list<Node*>::iterator _min;
 	int sz;
 };
 
